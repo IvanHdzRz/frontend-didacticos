@@ -1,9 +1,11 @@
 import React from 'react'
+import { Label } from './Label'
 import { WarningLabel } from './WarningLabel'
 
-export const InputText = ({ field:{name,value,onChange,onBlur} ,form:{touched,errors}}) => {
+export const InputText = ({ field:{name,value,onChange,onBlur} ,form:{touched,errors},label}) => {
     return (
-        <>
+        <div>
+            <Label forName={name} label={label} />
             <input
                 id={name}
                 name={name} 
@@ -23,6 +25,6 @@ export const InputText = ({ field:{name,value,onChange,onBlur} ,form:{touched,er
                 errors[name]&&
                 <WarningLabel forName={name} warnMessage={errors[name]} />
             }
-         </>
+         </div>
     )
 }

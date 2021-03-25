@@ -22,10 +22,8 @@ export const FormNewDidactico = () => {
             >
                 {({handleChange,handleBlur})=>(
                     <Form className="mt-8 px-2 grid grid-cols-2">
-                        <div className={``}>
-                            <Label forName="numero" label="Numero" />
-                            <Field name="numero" component={InputText}/>
-                        </div>
+                        <Field name="numero" component={InputText} label="Ingresa numero"/>
+                        
                     </Form>
                 )}
             </Formik>
