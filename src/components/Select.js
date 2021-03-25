@@ -14,8 +14,8 @@ export const Select = ({field:{name,value,onChange,onBlur} ,form:{touched,errors
                 value={value}
                 className={`
                     bg-white h-10 px-2 w-full mt-2 mb-1
-                    text-xl font-bold text-pink-500 capitalize
-                    border-solid border-2 border-pink-500 rounded outline-none 
+                    text-xl font-bold text-pink-400 capitalize
+                    border-solid border-2 border-pink-300 rounded outline-none 
                     focus:ring focus:ring-red-500 focus:ring-opacity-50
                 `}
             >

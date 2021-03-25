@@ -14,7 +14,7 @@ export const InputText = ({ field:{name,value,onChange,onBlur} ,form:{touched,er
                 className={`
                     h-10  px-2 w-full mt-2 mb-1
                     text-xl
-                    border-solid border-2 border-pink-500 rounded outline-none 
+                    border-solid border-2 border-pink-300 rounded outline-none 
                     focus:ring focus:ring-red-500 focus:ring-opacity-50 
                 `}
                 onChange={onChange}

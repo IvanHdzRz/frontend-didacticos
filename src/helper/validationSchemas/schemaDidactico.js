@@ -1,5 +1,6 @@
 import * as yup from 'yup'
 
+
 export const schemaDidactico = yup.object().shape({
     numero:yup
         .number()
@@ -9,6 +10,15 @@ export const schemaDidactico = yup.object().shape({
         .required('este campo es requerido'),
     tipo: yup
         .string()
-        .required('selecciona un tipo')
+        .required('selecciona un tipo'),
+    existencias: yup
+        .number()
+        .typeError('debe ser un numero')
+        .min(0,'debe ser por lo menos cero')
+        .integer('debe ser un numero entero')
+        .required('este campo es requerido'),
+    titulo: yup
+        .string()    
+        .required('debes especificar un titulo')
 })
 
