@@ -1,9 +1,10 @@
 
 import {InputText} from './components/InputText'
+import { FormNewDidactico } from './views/FormNewDidactico';
 
 function App() {
   return (
-    <InputText name="ejemplo" label="prueba" error={false} errorMessage="este campo en obligatorio perro"/>
+    <FormNewDidactico />
   );
 }
 
