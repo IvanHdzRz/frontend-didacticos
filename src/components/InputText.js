@@ -19,6 +19,7 @@ export const InputText = ({ field:{name,value,onChange,onBlur} ,form:{touched,er
                 `}
                 onChange={onChange}
                 onBlur={onBlur}
+                autoComplete="off"
             />
             {
                 touched[name]&&
