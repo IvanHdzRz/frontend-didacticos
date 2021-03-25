@@ -7,7 +7,7 @@ import { Select } from '../components/Select'
 
 
 export const FormNewDidactico = () => {
-    const formInitialValue={numero:'',tipo:'',nombre:'',existencias:0}
+    const formInitialValue={numero:'',tipo:'',titulo:'',existencias:0}
     const handleSubmit=(values, actions) => {
         setTimeout(() => {
           alert(JSON.stringify(values, null, 2));
