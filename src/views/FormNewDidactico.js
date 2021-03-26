@@ -4,7 +4,7 @@ import {SeccionTitle} from '../components/SeccionTitle'
 import {Formik,Form,Field} from 'formik'
 import {schemaDidactico} from '../helper/validationSchemas/schemaDidactico'
 import { Select } from '../components/Select'
-
+import {DropZone} from '../components/DropZone'
 
 export const FormNewDidactico = () => {
     const formInitialValue={numero:'',tipo:'',titulo:'',existencias:0}
@@ -35,6 +35,9 @@ export const FormNewDidactico = () => {
                             <Field name="titulo" component={InputText} label="titulo" />
                         </div>
                         <Field  name="existencias" component={InputText} label="existencias"/> 
+                        <div className="col-span-2">
+                            <DropZone />
+                        </div>
                     </Form>
                 )}
             </Formik>
