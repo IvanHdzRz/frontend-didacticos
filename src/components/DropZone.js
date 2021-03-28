@@ -2,12 +2,46 @@ import React,{useCallback} from 'react'
 import {useDropzone} from 'react-dropzone' 
 import { Label } from './Label'
 import PdfIcon from '../assets/icons/pdf.png'
+import * as _ from 'lodash'
 
-export const DropZone = () => {
-    const onDrop= useCallback(acceptedFiles=>{
-        alert(acceptedFiles)
-    },[])
-    const {getInputProps,getRootProps,isDragActive}=useDropzone({onDrop})
+export const DropZone = ({onSelectFile,onFileError, onTouchDropzone,fileName}) => {
+    const debounceSetTouch=_.debounce(function(){
+        console.log('soy unbounce')
+        onTouchDropzone(fileName,true)
+    },1000,{leading:true,trailing:false})
+    
+    const onDrop= useCallback((acceptedFiles,fileRejections)=>{
+       console.log('soy ondrop')
+        debounceSetTouch()
+        
+        if(fileRejections.length>0){
+            onFileError(fileName,'debe ser un archivo PDF')
+            console.log('la cagaste')
+        }
+        if(acceptedFiles.length>0){
+            onSelectFile(fileName,acceptedFiles[0])
+            console.log(acceptedFiles[0])
+        }
+
+    },[fileName,onSelectFile,onFileError,debounceSetTouch])
+    
+        
+    
+    const config={
+        onDrop:onDrop, //callback when a file is selected 
+        accept:'application/pdf', //tipe files accepted
+        maxFiles:1,
+        multiple:false, //disable multiple seleccion of files
+        onDragEnter:debounceSetTouch,
+        onFileDialogCancel:()=>{
+            debounceSetTouch()
+            onFileError(fileName,'debes escoger un documento')
+        }
+    }
+    const {getInputProps,getRootProps,isDragActive}=useDropzone(config)
+    /* if(isDragActive){
+        debounceSetTouch()
+    } */
 
     return (
         <div className={`w-full `}>

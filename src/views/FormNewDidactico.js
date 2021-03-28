@@ -5,9 +5,10 @@ import {Formik,Form,Field} from 'formik'
 import {schemaDidactico} from '../helper/validationSchemas/schemaDidactico'
 import { Select } from '../components/Select'
 import {DropZone} from '../components/DropZone'
+import { WarningLabel } from '../components/WarningLabel'
 
 export const FormNewDidactico = () => {
-    const formInitialValue={numero:'',tipo:'',titulo:'',existencias:0}
+    const formInitialValue={numero:'',tipo:'',titulo:'',existencias:0,pdf:null}
     const handleSubmit=(values, actions) => {
         setTimeout(() => {
           alert(JSON.stringify(values, null, 2));
@@ -19,8 +20,9 @@ export const FormNewDidactico = () => {
         <div className="bg-gray-100 min-h-screen">
             <SeccionTitle title="Agregar nuevo didactico"/>
             <Formik initialValues={formInitialValue} onSubmit={handleSubmit} validationSchema= {schemaDidactico} >
-                {()=>(
+                {({errors,touched,setFieldValue,setFieldError,setFieldTouched})=>(
                     <Form className="mt-8 px-2 grid grid-cols-2 gap-x-4 gap-y-6">
+                        
                         <Field name="numero" component={InputText} label="Numero"/>
                         <Field 
                             name="tipo"
@@ -36,7 +38,16 @@ export const FormNewDidactico = () => {
                         </div>
                         <Field  name="existencias" component={InputText} label="existencias"/> 
                         <div className="col-span-2">
-                            <DropZone />
+                            <DropZone 
+                                onSelectFile={setFieldValue} 
+                                onFileError={setFieldError}
+                                onTouchDropzone={setFieldTouched} 
+                                fileName="pdf"
+                            />
+                            {
+                                errors.pdf && touched.pdf &&
+                                <WarningLabel forName="pdf" warnMessage={errors.pdf} />
+                            }
                         </div>
                     </Form>
                 )}
