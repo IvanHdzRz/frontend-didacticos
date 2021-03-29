@@ -16,7 +16,7 @@ export const DropZone = ({onSelectFile,onFileError, onTouchDropzone,fileName}) =
         
         if(fileRejections.length>0){
             onFileError(fileName,'debe ser un archivo PDF')
-            console.log('la cagaste')
+            fileRejections.map(file=>console.log(file))
         }
         if(acceptedFiles.length>0){
             onSelectFile(fileName,acceptedFiles[0])

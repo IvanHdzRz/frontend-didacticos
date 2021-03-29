@@ -6,6 +6,7 @@ import {schemaDidactico} from '../helper/validationSchemas/schemaDidactico'
 import { Select } from '../components/Select'
 import {DropZone} from '../components/DropZone'
 import { WarningLabel } from '../components/WarningLabel'
+import { SubmitButton } from '../components/SubmitButton'
 
 export const FormNewDidactico = () => {
     const formInitialValue={numero:'',tipo:'',titulo:'',existencias:0,pdf:null}
@@ -49,6 +50,7 @@ export const FormNewDidactico = () => {
                                 <WarningLabel forName="pdf" warnMessage={errors.pdf} />
                             }
                         </div>
+                        <SubmitButton />
                     </Form>
                 )}
             </Formik>
