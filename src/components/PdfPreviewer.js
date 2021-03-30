@@ -25,12 +25,15 @@ export const PdfPreviewer = ({file}) => {
     useEffect(() => {
         const getPdf=async(file)=>{
             const buffer=await toArrayBuff(file)
-            pdfjsLib.getDocument(buffer).promise.then(pdf=>{
+            /* pdfjsLib.getDocument(buffer).promise.then(pdf=>{
                 const pdfDoc=pdf;
                 setpdfPages(pdfDoc.numPages)
                 setfetchPdf(false)
-            })
-                
+            }) */
+            const pdf= await pdfjsLib.getDocument(buffer).promise
+            const pdfDoc=pdf;
+            setpdfPages(pdfDoc.numPages)
+            setfetchPdf(false)
         }
        
         getPdf(file);
