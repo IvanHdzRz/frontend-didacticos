@@ -43,7 +43,8 @@ export const FormNewDidactico = () => {
                         {
                             values.pdf?
                                 <div className="col-span-2">
-                                    <PdfPreviewer src={values.pdf.path} />
+                                    <PdfPreviewer file={values.pdf} />
+                                    
                                 </div>
                                 :
                                 <div className="col-span-2">
