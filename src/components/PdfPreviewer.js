@@ -29,9 +29,7 @@ export const PdfPreviewer = ({file}) => {
         const  docPage= await pdf.getPage(page)
         const originalScale=1
         const viewport=docPage.getViewport({scale:originalScale})
-        const doctoRatio=viewport.width/viewport.height
-        const anchoDeseado=containerSize.height *doctoRatio
-        const scale=anchoDeseado/viewport.width
+        const scale=Math.min(containerSize.height/viewport.height,containerSize.width/viewport.width)
         const scaledViewport=docPage.getViewport({scale:scale})
         const context=canvasRef.current.getContext('2d')
         canvasRef.current.height = scaledViewport.height;
