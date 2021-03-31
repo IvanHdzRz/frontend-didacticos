@@ -29,10 +29,17 @@ export const PdfPreviewer = ({file}) => {
         const  docPage= await pdf.getPage(page)
         const originalScale=1
         const viewport=docPage.getViewport({scale:originalScale})
+        const doctoRatio=viewport.width/viewport.height
+        const anchoDeseado=containerSize.height *doctoRatio
+        const scale=anchoDeseado/viewport.width
+        const scaledViewport=docPage.getViewport({scale:scale})
         const context=canvasRef.current.getContext('2d')
-        var renderContext = {
+        canvasRef.current.height = scaledViewport.height;
+        canvasRef.current.width = scaledViewport.width;
+        
+        const renderContext = {
             canvasContext: context,
-            viewport: viewport
+            viewport: scaledViewport
           };
           docPage.render(renderContext);
     }
@@ -58,10 +65,10 @@ export const PdfPreviewer = ({file}) => {
     return( 
         <div className="w-full">
         <Label forName="preview" label="Preview"/>
-        <div ref={container} htmlFor="preview" className="w-full border-purple-500 border-2 h-40 mb-4" >
+        <div ref={container} htmlFor="preview" className="w-full bg-black border-purple-500 border-2 h-80 mb-4 flex justify-center items-center" >
             {
                 fetchPdf? <h1>cargando</h1>: 
-                <canvas ref={canvasRef}  width={containerSize.width} height={containerSize.height} >
+                <canvas ref={canvasRef}  >
                 </canvas>
             }
         </div>
