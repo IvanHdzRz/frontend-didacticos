@@ -50,7 +50,7 @@ export const DropZone = ({onSelectFile,onFileError, onTouchDropzone,fileName}) =
                 {...getRootProps()} 
                 className={`
                     border-4 border-dashed outline-none border-pink-300 rounded-xl 
-                    flex justify-center items-center h-40 mb-4
+                    flex justify-center items-center h-60 mb-4
                     bg-pink-50
                 `} 
             >

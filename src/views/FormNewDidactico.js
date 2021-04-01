@@ -8,6 +8,7 @@ import {DropZone} from '../components/DropZone'
 import { WarningLabel } from '../components/WarningLabel'
 import { SubmitButton } from '../components/SubmitButton'
 import { PdfPreviewer } from '../components/PdfPreviewer'
+import { Label } from '../components/Label'
 
 export const FormNewDidactico = () => {
     const formInitialValue={numero:'',tipo:'',titulo:'',existencias:0,pdf:null}
@@ -43,7 +44,8 @@ export const FormNewDidactico = () => {
                         {
                             values.pdf?
                                 <div className="col-span-2">
-                                    <PdfPreviewer file={values.pdf} />
+                                    <Label forName="preview" label="Preview"/>
+                                    <PdfPreviewer file={values.pdf} name="preview"/>
                                     
                                 </div>
                                 :

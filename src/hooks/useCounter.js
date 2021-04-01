@@ -1,22 +1,34 @@
 import { useState } from 'react'
 
 export const useCounter = ({initial,max,min}) => {
-    const [count, setcount] = useState(initial)
+    //inicializa el contador con sus valores maximo,minimo y el conteo inicial
+    //si el valor inicial dado esta fuera de los limites dados, min y max, coloca min
+    const [counter, setcounter] = useState({max,min,count:initial>=min&&initial<=max?initial:min})
     
     const onNext=()=>{
-        setcount(prevCount=>{
-            return prevCount<max?prevCount+1:min 
+        setcounter(({max,min,count})=>{ 
+            const newCount=count+1<=max?count+1:min
+            return {max,min,count:newCount}
         })
     }
     const onPrev=()=>{
-        setcount(prevCount=>{
-            return prevCount>min?prevCount-1:max 
+        setcounter(({max,min,count})=>{ 
+            const newCount=count-1>=min?count-1:max
+            return {max,min,count:newCount}
         })
     }
     const onReset=()=>{
-        setcount(initial)
+        setcounter(({max,min})=>{ 
+            return {max,min,count:initial>=min&&initial<=max?initial:min}
+        })
+    }
+    const setMax=(max)=>{
+        setcounter(prevState=>({...prevState,max:max}))
+    }
+    const setMin=(min)=>{
+        setcounter(prevState=>({...prevState,min:min}))
     }
 
-    return [count,onPrev,onNext,onReset]
+    return [counter,onPrev,onNext,onReset,setMax,setMin]
     
 }
