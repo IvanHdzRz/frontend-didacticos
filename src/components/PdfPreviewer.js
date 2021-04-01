@@ -1,4 +1,4 @@
-import React, {useEffect,  useLayoutEffect,  useRef,  useState } from 'react'
+import React, {useEffect,  useRef,  useState } from 'react'
 import * as pdfjsLib from "pdfjs-dist/build/pdf";
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
 import { fileToBufferArray } from '../helper/fileToBufferArray';
@@ -15,86 +15,70 @@ import { Button } from './Button';
 export const PdfPreviewer = ({file,name}) => {
     pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
     /*states*/
-    /* const [containerSize, setcontainerSize] = useState({height:0,width:0}) */
     const [pdfDoc, setpdfDoc] = useState(null)
     const [counter,prevPage,nextPage,,setPages]=useCounter({min:1,max:1,initial:1})   
     const {count:currentPage}=counter
-    /*referencias*/
+    /*flag*/
     const isRendering=useRef(false)
-    const fetchPdf=useRef(true)
     /*DOM references*/
     const container = useRef(null)
     const canvasRef=useRef()
-    /*rendeirados*/
+    /*store number of compenet renders*/
     const renderizados = useRef(0)
+    
+    
 
-    const getPdf =async(file) =>{
+    /* const getPdf =async(file) =>{
         const buffer=await fileToBufferArray(file)
         const pdf= await pdfjsLib.getDocument(buffer).promise
         const {numPages}=pdf
-        fetchPdf.current=false
         setpdfDoc(pdf)
         setPages(numPages)
-    }
-
-    /* const renderPage=async(currentPage)=>{
-        console.log('entre')
-        console.log(containerSize)
-        isRendering.current=true;
-        const  docPage= await pdfDoc.getPage(currentPage)
-        const originalScale=1
-        const viewport=docPage.getViewport({scale:originalScale})
-        const scale=Math.min(containerSize.height/viewport.height,containerSize.width/viewport.width)
-        const scaledViewport=docPage.getViewport({scale:scale})
-        const context=canvasRef.current.getContext('2d')
-        canvasRef.current.height = scaledViewport.height;
-        canvasRef.current.width = scaledViewport.width;
-        
-        const renderContext = {canvasContext: context,viewport: scaledViewport}
-        
-        console.log( docPage.render(renderContext).cancel)
-        isRendering.current=false;
     } */
 
-    //al cargar por primera vez el componente cargara el pdf
+   //al cargar por primera vez el componente cargara el pdf
     useEffect(() => {
+        const getPdf =async(file) =>{
+            const buffer=await fileToBufferArray(file)
+            const pdf= await pdfjsLib.getDocument(buffer).promise
+            const {numPages}=pdf
+            setpdfDoc(pdf)
+            setPages(numPages)
+        }
         getPdf(file);
     },[file])
+
     //despues del primer renderizado obtendra el ancho de su container
-   useLayoutEffect(() => {
+   useEffect(() => {
         const renderPage=async()=>{
+            isRendering.current=true
+            //getting size of current container
             const {width,height}=container.current.getBoundingClientRect()   
             const containerSize={width,height}
-            /* setcontainerSize({height:container.current.height,width:container.current.width }) */
-        /* setcontainerSize({width,height}) */
-            console.log('entre')
-            console.log(containerSize)
-            isRendering.current=true;
+            //getting page for render
             const  docPage= await pdfDoc.getPage(currentPage)
+            //re-scale page to fit in current container
             const originalScale=1
             const viewport=docPage.getViewport({scale:originalScale})
             const scale=Math.min(containerSize.height/viewport.height,containerSize.width/viewport.width)
             const scaledViewport=docPage.getViewport({scale:scale})
+            //prepating canvas 
             const context=canvasRef.current.getContext('2d')
             canvasRef.current.height = scaledViewport.height;
             canvasRef.current.width = scaledViewport.width;
-            
+            //rendering page 
             const renderContext = {canvasContext: context,viewport: scaledViewport}
-            
-            console.log( docPage.render(renderContext).cancel)
-            isRendering.current=false;
+            await docPage.render(renderContext).promise
+            isRendering.current=false
         }
-        pdfDoc&&renderPage()
+        //si ya cargo el pdf y no hay una tarea de renderizado activa
+        //entonces renderiza
+        pdfDoc&&!isRendering.current&&renderPage()
    },[currentPage,pdfDoc])
     
     
-    console.log(renderizados.current)
-    renderizados.current=renderizados.current+1
-    //si ya  cargo el pdf y no esta renderizando otra pagina rendereiza la pagina     
-    /* !fetchPdf.current&&!isRendering.current&& renderPage(currentPage) */
-   
     
-  
+    renderizados.current=renderizados.current+1
     
     return( 
         <div className="w-full">
@@ -108,12 +92,12 @@ export const PdfPreviewer = ({file,name}) => {
                 `}
             >
                 {
-                    fetchPdf.current? <h1>cargando</h1>: <canvas ref={canvasRef} />
+                    !pdfDoc? <h1>cargando</h1>: <canvas ref={canvasRef} />
                             
                 }
             </div>
             {
-                !fetchPdf.current&&
+                pdfDoc&&
                 <div className="space-x-4 flex-row">
                     <Button onClick={prevPage}>
                         <img src={arrowIcon} alt="prev icon" className="w-6 transform rotate-180" /> 
