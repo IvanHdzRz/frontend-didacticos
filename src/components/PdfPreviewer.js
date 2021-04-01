@@ -11,29 +11,36 @@ import { Button } from './Button';
 
 
 
+
 export const PdfPreviewer = ({file,name}) => {
     pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
     /*states*/
-    const [fetchPdf, setfetchPdf] = useState(true)
+    /* const [containerSize, setcontainerSize] = useState({height:0,width:0}) */
     const [pdfDoc, setpdfDoc] = useState(null)
-    const [containerSize, setcontainerSize] = useState({height:0,width:0})
     const [counter,prevPage,nextPage,,setPages]=useCounter({min:1,max:1,initial:1})   
+    const {count:currentPage}=counter
+    /*referencias*/
+    const isRendering=useRef(false)
+    const fetchPdf=useRef(true)
     /*DOM references*/
     const container = useRef(null)
-    const canvasRef=useRef(null)
-    const {count:currentPage}=counter
-    
+    const canvasRef=useRef()
+    /*rendeirados*/
+    const renderizados = useRef(0)
+
     const getPdf =async(file) =>{
         const buffer=await fileToBufferArray(file)
         const pdf= await pdfjsLib.getDocument(buffer).promise
         const {numPages}=pdf
-        setPages(numPages)
-        setfetchPdf(false)
+        fetchPdf.current=false
         setpdfDoc(pdf)
+        setPages(numPages)
     }
-    
-    
-    const renderPage=async(currentPage)=>{
+
+    /* const renderPage=async(currentPage)=>{
+        console.log('entre')
+        console.log(containerSize)
+        isRendering.current=true;
         const  docPage= await pdfDoc.getPage(currentPage)
         const originalScale=1
         const viewport=docPage.getViewport({scale:originalScale})
@@ -42,27 +49,51 @@ export const PdfPreviewer = ({file,name}) => {
         const context=canvasRef.current.getContext('2d')
         canvasRef.current.height = scaledViewport.height;
         canvasRef.current.width = scaledViewport.width;
+        
         const renderContext = {canvasContext: context,viewport: scaledViewport}
-        docPage.render(renderContext);
-    }
+        
+        console.log( docPage.render(renderContext).cancel)
+        isRendering.current=false;
+    } */
+
     //al cargar por primera vez el componente cargara el pdf
     useEffect(() => {
         getPdf(file);
     },[file])
     //despues del primer renderizado obtendra el ancho de su container
-    useLayoutEffect(() => {
-        setcontainerSize({
-            height:container.current.offsetHeight,
-            width:container.current.offsetWidth
-        }) 
-    },[currentPage])
-    //cada vez que se cambie de pagina, renderiza de nuevo el pdf
-    //en la pagina solicitada
-    useEffect(() => {
-        if(fetchPdf===false){
-            renderPage(currentPage)
+   useLayoutEffect(() => {
+        const renderPage=async()=>{
+            const {width,height}=container.current.getBoundingClientRect()   
+            const containerSize={width,height}
+            /* setcontainerSize({height:container.current.height,width:container.current.width }) */
+        /* setcontainerSize({width,height}) */
+            console.log('entre')
+            console.log(containerSize)
+            isRendering.current=true;
+            const  docPage= await pdfDoc.getPage(currentPage)
+            const originalScale=1
+            const viewport=docPage.getViewport({scale:originalScale})
+            const scale=Math.min(containerSize.height/viewport.height,containerSize.width/viewport.width)
+            const scaledViewport=docPage.getViewport({scale:scale})
+            const context=canvasRef.current.getContext('2d')
+            canvasRef.current.height = scaledViewport.height;
+            canvasRef.current.width = scaledViewport.width;
+            
+            const renderContext = {canvasContext: context,viewport: scaledViewport}
+            
+            console.log( docPage.render(renderContext).cancel)
+            isRendering.current=false;
         }
-    },[currentPage,fetchPdf])
+        pdfDoc&&renderPage()
+   },[currentPage,pdfDoc])
+    
+    
+    console.log(renderizados.current)
+    renderizados.current=renderizados.current+1
+    //si ya  cargo el pdf y no esta renderizando otra pagina rendereiza la pagina     
+    /* !fetchPdf.current&&!isRendering.current&& renderPage(currentPage) */
+   
+    
   
     
     return( 
@@ -77,12 +108,12 @@ export const PdfPreviewer = ({file,name}) => {
                 `}
             >
                 {
-                    fetchPdf? <h1>cargando</h1>: <canvas ref={canvasRef} />
+                    fetchPdf.current? <h1>cargando</h1>: <canvas ref={canvasRef} />
                             
                 }
             </div>
             {
-                !fetchPdf&&
+                !fetchPdf.current&&
                 <div className="space-x-4 flex-row">
                     <Button onClick={prevPage}>
                         <img src={arrowIcon} alt="prev icon" className="w-6 transform rotate-180" /> 
@@ -93,9 +124,7 @@ export const PdfPreviewer = ({file,name}) => {
                     <Button onClick={()=>{alert('uwu')}}>
                         <img src={rotateIcon} alt="rotate icon" className="w-6" /> 
                     </Button>
-                    <button onClick={prevPage}>
-
-                    </button>
+                    
                 </div>
             }
         </div>
