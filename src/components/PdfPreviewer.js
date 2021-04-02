@@ -16,27 +16,21 @@ export const PdfPreviewer = ({file,name}) => {
     pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
     /*states*/
     const [pdfDoc, setpdfDoc] = useState(null)
-    const [counter,prevPage,nextPage,,setPages]=useCounter({min:1,max:1,initial:1})   
+    //change page of document to render
+    const [counter,prevPage,nextPage,,setPages]=useCounter({min:1,max:1,initial:1}) 
+    //change orientacion of page
+    const[rotate,,nextRotation]=useCounter({min:0,max:3,initial:0})  
     const {count:currentPage}=counter
-    /*flag*/
+    const {count:currentRotation}=rotate
+    /*flag to trigger render only when ends other render*/
     const isRendering=useRef(false)
-    /*DOM references*/
+    /*DOM references to fit pdf size in container*/
     const container = useRef(null)
     const canvasRef=useRef()
-    /*store number of compenet renders*/
+    /*store number of compenent renders*/
     const renderizados = useRef(0)
-    
-    
 
-    /* const getPdf =async(file) =>{
-        const buffer=await fileToBufferArray(file)
-        const pdf= await pdfjsLib.getDocument(buffer).promise
-        const {numPages}=pdf
-        setpdfDoc(pdf)
-        setPages(numPages)
-    } */
-
-   //al cargar por primera vez el componente cargara el pdf
+   //in first render will load pdf
     useEffect(() => {
         const getPdf =async(file) =>{
             const buffer=await fileToBufferArray(file)
@@ -48,7 +42,7 @@ export const PdfPreviewer = ({file,name}) => {
         getPdf(file);
     },[file])
 
-    //despues del primer renderizado obtendra el ancho de su container
+    //when chenges pdf, page or orientation will trigger a render 
    useEffect(() => {
         const renderPage=async()=>{
             isRendering.current=true
@@ -60,8 +54,11 @@ export const PdfPreviewer = ({file,name}) => {
             //re-scale page to fit in current container
             const originalScale=1
             const viewport=docPage.getViewport({scale:originalScale})
-            const scale=Math.min(containerSize.height/viewport.height,containerSize.width/viewport.width)
-            const scaledViewport=docPage.getViewport({scale:scale})
+            //scale depends if rotations is landscape or vertical
+            const scale=currentRotation%2?
+                Math.min(containerSize.width/viewport.height,containerSize.height/viewport.width):    
+                Math.min(containerSize.height/viewport.height,containerSize.width/viewport.width)
+            const scaledViewport=docPage.getViewport({scale:scale,rotation:currentRotation*90})
             //prepating canvas 
             const context=canvasRef.current.getContext('2d')
             canvasRef.current.height = scaledViewport.height;
@@ -71,13 +68,12 @@ export const PdfPreviewer = ({file,name}) => {
             await docPage.render(renderContext).promise
             isRendering.current=false
         }
-        //si ya cargo el pdf y no hay una tarea de renderizado activa
-        //entonces renderiza
+        //if pdf is ready and other renders task has ended, then render
         pdfDoc&&!isRendering.current&&renderPage()
-   },[currentPage,pdfDoc])
+   },[currentPage,pdfDoc,currentRotation])
     
     
-    
+    console.log(renderizados.current)
     renderizados.current=renderizados.current+1
     
     return( 
@@ -105,7 +101,7 @@ export const PdfPreviewer = ({file,name}) => {
                     <Button onClick={nextPage}>
                         <img src={arrowIcon} alt="next icon" className="w-6" /> 
                     </Button>
-                    <Button onClick={()=>{alert('uwu')}}>
+                    <Button onClick={nextRotation}>
                         <img src={rotateIcon} alt="rotate icon" className="w-6" /> 
                     </Button>
                     
