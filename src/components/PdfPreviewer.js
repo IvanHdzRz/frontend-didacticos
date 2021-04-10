@@ -97,20 +97,23 @@ export const PdfPreviewer = ({file,name,setPdfFile}) => {
             </div>
             {
                 pdfDoc&&
-                <div className="space-x-4 flex-row">
-                    <Button onClick={prevPage}>
-                        <img src={arrowIcon} alt="prev icon" className="w-6 transform rotate-180" /> 
-                    </Button>
-                    <Button onClick={nextPage}>
-                        <img src={arrowIcon} alt="next icon" className="w-6" /> 
-                    </Button>
-                    <Button onClick={nextRotation}>
-                        <img src={rotateIcon} alt="rotate icon" className="w-6" /> 
-                    </Button>
-                    <button onClick={handleClosePreview} className="absolute right-2 top-2">
-                        <img src={closeIcon} alt="close icon" className="w-6" /> 
-                    </button>
-                </div>
+                    <div>
+                        <div className="space-x-4 flex-row absolute bottom-0 right-0 left-0">
+                            <Button onClick={prevPage}>
+                                <img src={arrowIcon} alt="prev icon" className="w-6 transform rotate-180" /> 
+                            </Button>
+                            <Button onClick={nextPage}>
+                                <img src={arrowIcon} alt="next icon" className="w-6" /> 
+                            </Button>
+                            <Button onClick={nextRotation}>
+                                <img src={rotateIcon} alt="rotate icon" className="w-6" /> 
+                            </Button>
+                            
+                        </div>
+                        <button onClick={handleClosePreview} className="absolute right-2 top-2">
+                                <img src={closeIcon} alt="close icon" className="w-6" /> 
+                        </button>
+                    </div>
             }
         </div>
     )

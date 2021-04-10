@@ -44,7 +44,7 @@ export const FormNewDidactico = () => {
                         {
                             values.pdf?
                                 <div className="col-span-2">
-                                    <Label forName="preview" label="Preview"/>
+                                    <Label forName="preview" label="Selecciona una vista previa"/>
                                     <PdfPreviewer file={values.pdf} name="pdf"  setPdfFile={setFieldValue}/>
                                     
                                 </div>
