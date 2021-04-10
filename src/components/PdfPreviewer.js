@@ -80,25 +80,40 @@ export const PdfPreviewer = ({file,name,setPdfFile}) => {
     renderizados.current=renderizados.current+1
     
     return( 
-        <div className="w-full relative">
+        <div className="w-full ">
             <div  
                 ref={container} 
                 name={name} 
-                className={`
-                    border-4 border-dashed outline-none border-pink-300 rounded-xl 
-                    flex justify-center items-center h-60 mb-4
-                    bg-pink-50
-                `}
+                className={`border-4 border-dashed outline-none border-pink-300 rounded-xl flex justify-center items-center h-60 mb-4 bg-pink-50 relative`}
             >
                 {
-                    !pdfDoc? <h1>cargando</h1>: <canvas ref={canvasRef} />
+                    !pdfDoc? 
+                        <h1>cargando</h1>: 
+                        <div>
+                            <canvas ref={canvasRef} />
+                            <div className="space-x-4 flex-row absolute bottom-0 right-0 left-0">
+                                <Button onClick={prevPage}>
+                                    <img src={arrowIcon} alt="prev icon" className="w-6 transform rotate-180" /> 
+                                </Button>
+                                <Button onClick={nextPage}>
+                                    <img src={arrowIcon} alt="next icon" className="w-6" /> 
+                                </Button>
+                                <Button onClick={nextRotation}>
+                                    <img src={rotateIcon} alt="rotate icon" className="w-6" /> 
+                                </Button>
+                                
+                            </div>
+                            <button onClick={handleClosePreview} className="absolute right-2 top-2">
+                                    <img src={closeIcon} alt="close icon" className="w-6" /> 
+                            </button>
+                        </div>
                             
                 }
             </div>
             {
                 pdfDoc&&
-                    <div>
-                        <div className="space-x-4 flex-row absolute bottom-0 right-0 left-0">
+                    <div className="static">
+                        {/* <div className="space-x-4 flex-row absolute bottom-0 right-0 left-0">
                             <Button onClick={prevPage}>
                                 <img src={arrowIcon} alt="prev icon" className="w-6 transform rotate-180" /> 
                             </Button>
@@ -112,7 +127,10 @@ export const PdfPreviewer = ({file,name,setPdfFile}) => {
                         </div>
                         <button onClick={handleClosePreview} className="absolute right-2 top-2">
                                 <img src={closeIcon} alt="close icon" className="w-6" /> 
-                        </button>
+                        </button> */}
+                        <Button onClick={()=>alert('uwu')}>
+                            Elegir esta vista previa
+                        </Button>
                     </div>
             }
         </div>
