@@ -20,6 +20,7 @@ export const schemaDidactico = yup.object().shape({
     titulo: yup
         .string()    
         .required('debes especificar un titulo'),
-    pdf: yup.mixed().required('debes escoger un documento')
+    pdf: yup.mixed().required('debes escoger un documento'),
+    img: yup.mixed().required('debes escoger una previsualizacion '),
 })
 

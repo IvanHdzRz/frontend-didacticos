@@ -12,7 +12,7 @@ import { Button } from './Button';
 
 
 
-export const PdfPreviewer = ({file,name,setPdfFile}) => {
+export const PdfPreviewer = ({file,fileName,blobName,setFieldValue}) => {
     pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
     /*states*/
     const [pdfDoc, setpdfDoc] = useState(null)
@@ -31,8 +31,17 @@ export const PdfPreviewer = ({file,name,setPdfFile}) => {
     const renderizados = useRef(0)
     
     const handleClosePreview=()=>{
-        setPdfFile(name,null)
+        //set a the value of pdf file to null, this will close preview
+        //and user can choose other file in case he select a incorrect
+        setFieldValue(fileName,null)
+        setFieldValue(blobName,null)
     }
+    const handleConvertCanvasToBlob=()=>{
+        canvasRef.current.toBlob(blob=>{
+            setFieldValue(blobName,blob)
+        })
+    }
+
    //in first render will load pdf
     useEffect(() => {
         const getPdf =async(file) =>{
@@ -83,7 +92,7 @@ export const PdfPreviewer = ({file,name,setPdfFile}) => {
         <div className="w-full ">
             <div  
                 ref={container} 
-                name={name} 
+                name={fileName} 
                 className={`border-4 border-dashed outline-none border-pink-300 rounded-xl flex justify-center items-center h-60 mb-4 bg-pink-50 relative`}
             >
                 {
@@ -128,7 +137,7 @@ export const PdfPreviewer = ({file,name,setPdfFile}) => {
                         <button onClick={handleClosePreview} className="absolute right-2 top-2">
                                 <img src={closeIcon} alt="close icon" className="w-6" /> 
                         </button> */}
-                        <Button onClick={()=>alert('uwu')}>
+                        <Button onClick={handleConvertCanvasToBlob}>
                             Elegir esta vista previa
                         </Button>
                     </div>

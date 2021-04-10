@@ -11,7 +11,7 @@ import { PdfPreviewer } from '../components/PdfPreviewer'
 import { Label } from '../components/Label'
 
 export const FormNewDidactico = () => {
-    const formInitialValue={numero:'',tipo:'',titulo:'',existencias:0,pdf:null}
+    const formInitialValue={numero:'',tipo:'',titulo:'',existencias:0,pdf:null,img:null}
     const handleSubmit=(values, actions) => {
         setTimeout(() => {
           alert(JSON.stringify(values, null, 2));
@@ -45,8 +45,11 @@ export const FormNewDidactico = () => {
                             values.pdf?
                                 <div className="col-span-2">
                                     <Label forName="preview" label="Selecciona una vista previa"/>
-                                    <PdfPreviewer file={values.pdf} name="pdf"  setPdfFile={setFieldValue}/>
-                                    
+                                    <PdfPreviewer file={values.pdf} fileName="pdf" blobName="img" setFieldValue={setFieldValue}/>
+                                    {
+                                        errors.img && touched.img &&
+                                        <WarningLabel forName="pdf" warnMessage={errors.img} />
+                                    }
                                 </div>
                                 :
                                 <div className="col-span-2">
