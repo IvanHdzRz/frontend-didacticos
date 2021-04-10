@@ -5,14 +5,14 @@ import { fileToBufferArray } from '../helper/fileToBufferArray';
 import { useCounter } from '../hooks/useCounter';
 import arrowIcon from '../assets/icons/right-arrow.png'
 import rotateIcon from '../assets/icons/rotate.png'
-/* import closeIcon from '../assets/icons/close.png' */
+import closeIcon from '../assets/icons/close.png'
 import { Button } from './Button';
 
 
 
 
 
-export const PdfPreviewer = ({file,name}) => {
+export const PdfPreviewer = ({file,name,setPdfFile}) => {
     pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
     /*states*/
     const [pdfDoc, setpdfDoc] = useState(null)
@@ -29,7 +29,10 @@ export const PdfPreviewer = ({file,name}) => {
     const canvasRef=useRef()
     /*store number of compenent renders*/
     const renderizados = useRef(0)
-
+    
+    const handleClosePreview=()=>{
+        setPdfFile(name,null)
+    }
    //in first render will load pdf
     useEffect(() => {
         const getPdf =async(file) =>{
@@ -77,7 +80,7 @@ export const PdfPreviewer = ({file,name}) => {
     renderizados.current=renderizados.current+1
     
     return( 
-        <div className="w-full">
+        <div className="w-full relative">
             <div  
                 ref={container} 
                 name={name} 
@@ -104,7 +107,9 @@ export const PdfPreviewer = ({file,name}) => {
                     <Button onClick={nextRotation}>
                         <img src={rotateIcon} alt="rotate icon" className="w-6" /> 
                     </Button>
-                    
+                    <button onClick={handleClosePreview} className="absolute right-2 top-2">
+                        <img src={closeIcon} alt="close icon" className="w-6" /> 
+                    </button>
                 </div>
             }
         </div>
