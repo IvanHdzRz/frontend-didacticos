@@ -20,11 +20,11 @@ export const FormNewDidactico = () => {
     }
 
     return (
-        <div className="bg-gray-100 min-h-screen">
+        <div className="bg-gray-100 min-h-screen pb-8">
             <SeccionTitle title="Agregar nuevo didactico"/>
             <Formik initialValues={formInitialValue} onSubmit={handleSubmit} validationSchema= {schemaDidactico} >
                 {({errors,touched,setFieldValue,setFieldError,setFieldTouched,values})=>(
-                    <Form className="mt-8 px-2 grid grid-cols-2 gap-x-4 gap-y-6">
+                    <Form className="mt-8  w-11/12	mx-auto rounded-lg px-4 py-8 grid grid-cols-2 gap-x-4 gap-y-6 bg-white">
                         
                         <Field name="numero" component={InputText} label="Numero"/>
                         <Field 
