@@ -10,6 +10,11 @@ import { SubmitButton } from '../components/SubmitButton'
 import { PdfPreviewer } from '../components/PdfPreviewer'
 import { Label } from '../components/Label'
 
+/*TODO 
+    DISABLED all inputs while is Submittig
+
+*/
+
 export const FormNewDidactico = () => {
     const formInitialValue={numero:'',tipo:'',titulo:'',existencias:0,pdf:null,img:null}
     const handleSubmit=(values, actions) => {
@@ -32,6 +37,7 @@ export const FormNewDidactico = () => {
                             label="tipo"
                             component={Select}
                             options={[
+                                {name:'Selecciona',value:''},
                                 {name:'monografia',value:'mngf'},
                                 {name:'biografia',value:'bgrf'},
                             ]} 
