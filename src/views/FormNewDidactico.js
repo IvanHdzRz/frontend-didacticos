@@ -16,14 +16,14 @@ export const FormNewDidactico = () => {
         setTimeout(() => {
           alert(JSON.stringify(values, null, 2));
           actions.setSubmitting(false);
-        }, 1000);
+        }, 5000);
     }
 
     return (
         <div className="bg-gray-100 min-h-screen pb-8">
             <SeccionTitle title="Agregar nuevo didactico"/>
             <Formik initialValues={formInitialValue} onSubmit={handleSubmit} validationSchema= {schemaDidactico} >
-                {({errors,touched,setFieldValue,setFieldError,setFieldTouched,values})=>(
+                {({errors,touched,setFieldValue,setFieldError,setFieldTouched,values,isSubmitting})=>(
                     <Form className="mt-8  w-11/12	mx-auto rounded-lg px-4 py-8 grid grid-cols-2 gap-x-4 gap-y-6 bg-white">
                         
                         <Field name="numero" component={InputText} label="Numero"/>
@@ -65,7 +65,7 @@ export const FormNewDidactico = () => {
                                     }
                                 </div>
                         }
-                        <SubmitButton />
+                        <SubmitButton isSubmiting={isSubmitting} />
                     </Form>
                 )}
             </Formik>
