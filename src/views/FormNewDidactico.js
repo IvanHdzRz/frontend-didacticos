@@ -17,11 +17,31 @@ import { Label } from '../components/Label'
 
 export const FormNewDidactico = () => {
     const formInitialValue={numero:'',tipo:'',titulo:'',existencias:0,pdf:null,img:null}
-    const handleSubmit=(values, actions) => {
-        setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
-          actions.setSubmitting(false);
-        }, 5000);
+    const handleSubmit=async(values, actions) =>{
+        const {existencias,numero,tipo,titulo:nombre,pdf,img}=values
+        const didactico={existencias,numero,tipo,nombre,tags:['ejemplo','prueba 1']}
+        const formData=new FormData();
+        
+        formData.append("didactico",JSON.stringify(didactico))
+        formData.append("pdf",pdf,"didactico_pdf.pdf")
+        formData.append("img",img,"didactico_img.png")
+        console.log(img)
+        const options={
+            method:'POST',
+            redirect:'follow',
+            body:formData
+        }
+
+        fetch('http://localhost:5000/api/didacticos',options)
+            .then(res=>res.text())
+            .then(result=>{
+                console.log(result)
+                actions.setSubmitting(false)
+            })
+            .catch(e=>{
+                console.log(e)
+            })
+        
     }
 
     return (
