@@ -20,8 +20,12 @@ export const PdfPreviewer = ({file,fileName,blobName,setFieldValue}) => {
     const [counter,prevPage,nextPage,,setPages]=useCounter({min:1,max:1,initial:1}) 
     //change orientacion of page
     const[rotate,,nextRotation]=useCounter({min:0,max:3,initial:0})  
+    const [imgUrl, setimgUrl] = useState(null)
+    
     const {count:currentPage}=counter
     const {count:currentRotation}=rotate
+    
+    
     /*flag to trigger render only when ends other render*/
     const isRendering=useRef(false)
     /*DOM references to fit pdf size in container*/
@@ -30,6 +34,7 @@ export const PdfPreviewer = ({file,fileName,blobName,setFieldValue}) => {
     /*store number of compenent renders*/
     const renderizados = useRef(0)
     
+
     const handleClosePreview=()=>{
         //set a the value of pdf file to null, this will close preview
         //and user can choose other file in case he select a incorrect
@@ -58,26 +63,31 @@ export const PdfPreviewer = ({file,fileName,blobName,setFieldValue}) => {
    useEffect(() => {
         const renderPage=async()=>{
             isRendering.current=true
-            //getting size of current container
+            /* //getting size of current container
             const {width,height}=container.current.getBoundingClientRect()   
             const containerSize={width,height}
-            //getting page for render
+            //getting page for render */
             const  docPage= await pdfDoc.getPage(currentPage)
             //re-scale page to fit in current container
             const originalScale=1
-            const viewport=docPage.getViewport({scale:originalScale})
-            //scale depends if rotations is landscape or vertical
+            const viewport=docPage.getViewport({scale:originalScale,rotation:currentRotation*90})
+           /*  //scale depends if rotations is landscape or vertical
             const scale=currentRotation%2?
                 Math.min(containerSize.width/viewport.height,containerSize.height/viewport.width):    
                 Math.min(containerSize.height/viewport.height,containerSize.width/viewport.width)
-            const scaledViewport=docPage.getViewport({scale:scale,rotation:currentRotation*90})
+            const scaledViewport=docPage.getViewport({scale:scale,rotation:currentRotation*90}) */
             //prepating canvas 
             const context=canvasRef.current.getContext('2d')
-            canvasRef.current.height = scaledViewport.height;
-            canvasRef.current.width = scaledViewport.width;
+            /* canvasRef.current.height = scaledViewport.height;
+            canvasRef.current.width = scaledViewport.width; */
+
+            canvasRef.current.height =viewport.height;
+            canvasRef.current.width = viewport.width;
             //rendering page 
-            const renderContext = {canvasContext: context,viewport: scaledViewport}
+            const renderContext = {canvasContext: context,viewport: viewport}
             await docPage.render(renderContext).promise
+            const imgUrl=canvasRef.current.toDataURL();
+            setimgUrl(imgUrl)
             isRendering.current=false
         }
         //if pdf is ready and other renders task has ended, then render
@@ -98,8 +108,9 @@ export const PdfPreviewer = ({file,fileName,blobName,setFieldValue}) => {
                 {
                     !pdfDoc? 
                         <h1>cargando</h1>: 
-                        <div>
-                            <canvas ref={canvasRef} />
+                        <div className="h-full w-full">
+                            <canvas ref={canvasRef} className="hidden"/>
+                            <img src={imgUrl} alt="preview" className="h-full w-full object-contain"/>
                             <div className="space-x-4 flex-row absolute bottom-0 right-0 left-0">
                                 <Button onClick={prevPage}>
                                     <img src={arrowIcon} alt="prev icon" className="w-6 transform rotate-180" /> 
@@ -122,21 +133,6 @@ export const PdfPreviewer = ({file,fileName,blobName,setFieldValue}) => {
             {
                 pdfDoc&&
                     <div className="static">
-                        {/* <div className="space-x-4 flex-row absolute bottom-0 right-0 left-0">
-                            <Button onClick={prevPage}>
-                                <img src={arrowIcon} alt="prev icon" className="w-6 transform rotate-180" /> 
-                            </Button>
-                            <Button onClick={nextPage}>
-                                <img src={arrowIcon} alt="next icon" className="w-6" /> 
-                            </Button>
-                            <Button onClick={nextRotation}>
-                                <img src={rotateIcon} alt="rotate icon" className="w-6" /> 
-                            </Button>
-                            
-                        </div>
-                        <button onClick={handleClosePreview} className="absolute right-2 top-2">
-                                <img src={closeIcon} alt="close icon" className="w-6" /> 
-                        </button> */}
                         <Button onClick={handleConvertCanvasToBlob}>
                             Elegir esta vista previa
                         </Button>

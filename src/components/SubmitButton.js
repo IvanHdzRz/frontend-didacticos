@@ -5,7 +5,7 @@ export const SubmitButton = ({isSubmiting=false}) => {
     return (
         <button 
             type="submit"  
-            className={`flex justify-center items-center px-4 py-2 space-x-2 ${isSubmiting?'bg-pink-300':'bg-pink-600'} rounded border-pink-600 border-2 text-center font-bold text-white text-md capitalize`}
+            className={`w-full flex justify-center items-center px-4 py-2 space-x-2 ${isSubmiting?'bg-pink-300':'bg-pink-600'} rounded border-pink-600 border-2 text-center font-bold text-white text-md capitalize`}
             disabled={isSubmiting}
         > 
             <p>{isSubmiting?'Guardando':'Guardar'}</p>

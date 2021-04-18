@@ -9,6 +9,7 @@ import { WarningLabel } from '../components/WarningLabel'
 import { SubmitButton } from '../components/SubmitButton'
 import { PdfPreviewer } from '../components/PdfPreviewer'
 import { Label } from '../components/Label'
+import {apiUrl} from '../env/apiurl'
 
 /*TODO 
     DISABLED all inputs while is Submittig
@@ -17,7 +18,7 @@ import { Label } from '../components/Label'
 
 export const FormNewDidactico = () => {
     const formInitialValue={numero:'',tipo:'',titulo:'',existencias:0,pdf:null,img:null}
-    const handleSubmit=async(values, actions) =>{
+    const handleSubmit=(values, {setSubmitting}) =>{
         const {existencias,numero,tipo,titulo:nombre,pdf,img}=values
         const didactico={existencias,numero,tipo,nombre,tags:['ejemplo','prueba 1']}
         const formData=new FormData();
@@ -32,16 +33,16 @@ export const FormNewDidactico = () => {
             body:formData
         }
 
-        fetch('http://localhost:5000/api/didacticos',options)
+        fetch(`${apiUrl}/didacticos`,options)
             .then(res=>res.text())
             .then(result=>{
                 console.log(result)
-                actions.setSubmitting(false)
+                setSubmitting(false)
             })
             .catch(e=>{
                 console.log(e)
             })
-        
+            
     }
 
     return (
@@ -91,7 +92,9 @@ export const FormNewDidactico = () => {
                                     }
                                 </div>
                         }
-                        <SubmitButton isSubmiting={isSubmitting} />
+                        <div className="col-span-2">
+                            <SubmitButton isSubmiting={isSubmitting} />
+                        </div>
                     </Form>
                 )}
             </Formik>
