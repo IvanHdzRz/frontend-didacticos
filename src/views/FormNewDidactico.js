@@ -18,7 +18,7 @@ import {apiUrl} from '../env/apiurl'
 
 export const FormNewDidactico = () => {
     const formInitialValue={numero:'',tipo:'',titulo:'',existencias:0,pdf:null,img:null}
-    const handleSubmit=(values, {setSubmitting}) =>{
+    const handleSubmit=(values, {setSubmitting,resetForm}) =>{
         const {existencias,numero,tipo,titulo:nombre,pdf,img}=values
         const didactico={existencias,numero,tipo,nombre,tags:['ejemplo','prueba 1']}
         const formData=new FormData();
@@ -38,6 +38,7 @@ export const FormNewDidactico = () => {
             .then(result=>{
                 console.log(result)
                 setSubmitting(false)
+                resetForm();
             })
             .catch(e=>{
                 console.log(e)
