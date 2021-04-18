@@ -2,7 +2,7 @@ import React from 'react'
 import { Label } from './Label'
 import {WarningLabel} from './WarningLabel'
 
-export const Select = ({field:{name,value,onChange,onBlur} ,form:{touched,errors},label,options}) => {
+export const Select = ({field:{name,value,onChange,onBlur} ,form:{touched,errors},label,options,disabled}) => {
     return (
         <div>
             <Label forName={name} label={label} />
@@ -18,6 +18,7 @@ export const Select = ({field:{name,value,onChange,onBlur} ,form:{touched,errors
                     border-solid border-2 border-pink-300 rounded outline-none 
                     focus:ring focus:ring-red-500 focus:ring-opacity-50
                 `}
+                disabled={disabled}
             >
                 {
                     options.map((opt,i)=>(

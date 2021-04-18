@@ -2,7 +2,7 @@ import React from 'react'
 import { Label } from './Label'
 import { WarningLabel } from './WarningLabel'
 
-export const InputText = ({ field:{name,value,onChange,onBlur} ,form:{touched,errors},label}) => {
+export const InputText = ({ field:{name,value,onChange,onBlur} ,form:{touched,errors},label,disabled}) => {
     return (
         <div>
             <Label forName={name} label={label} />
@@ -20,6 +20,7 @@ export const InputText = ({ field:{name,value,onChange,onBlur} ,form:{touched,er
                 onChange={onChange}
                 onBlur={onBlur}
                 autoComplete="off"
+                disabled={disabled}
             />
             {
                 touched[name]&&

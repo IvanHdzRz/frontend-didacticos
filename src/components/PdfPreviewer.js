@@ -12,7 +12,7 @@ import { Button } from './Button';
 
 
 
-export const PdfPreviewer = ({file,fileName,blobName,setFieldValue}) => {
+export const PdfPreviewer = ({file,fileName,blobName,setFieldValue,disabled}) => {
     pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
     /*states*/
     const [pdfDoc, setpdfDoc] = useState(null)
@@ -63,24 +63,10 @@ export const PdfPreviewer = ({file,fileName,blobName,setFieldValue}) => {
    useEffect(() => {
         const renderPage=async()=>{
             isRendering.current=true
-            /* //getting size of current container
-            const {width,height}=container.current.getBoundingClientRect()   
-            const containerSize={width,height}
-            //getting page for render */
             const  docPage= await pdfDoc.getPage(currentPage)
-            //re-scale page to fit in current container
             const originalScale=1
             const viewport=docPage.getViewport({scale:originalScale,rotation:currentRotation*90})
-           /*  //scale depends if rotations is landscape or vertical
-            const scale=currentRotation%2?
-                Math.min(containerSize.width/viewport.height,containerSize.height/viewport.width):    
-                Math.min(containerSize.height/viewport.height,containerSize.width/viewport.width)
-            const scaledViewport=docPage.getViewport({scale:scale,rotation:currentRotation*90}) */
-            //prepating canvas 
             const context=canvasRef.current.getContext('2d')
-            /* canvasRef.current.height = scaledViewport.height;
-            canvasRef.current.width = scaledViewport.width; */
-
             canvasRef.current.height =viewport.height;
             canvasRef.current.width = viewport.width;
             //rendering page 
@@ -112,18 +98,18 @@ export const PdfPreviewer = ({file,fileName,blobName,setFieldValue}) => {
                             <canvas ref={canvasRef} className="hidden"/>
                             <img src={imgUrl} alt="preview" className="h-full w-full object-contain"/>
                             <div className="space-x-4 flex-row absolute bottom-0 right-0 left-0">
-                                <Button onClick={prevPage}>
+                                <Button onClick={prevPage} disabled={disabled}>
                                     <img src={arrowIcon} alt="prev icon" className="w-6 transform rotate-180" /> 
                                 </Button>
-                                <Button onClick={nextPage}>
+                                <Button onClick={nextPage} disabled={disabled}>
                                     <img src={arrowIcon} alt="next icon" className="w-6" /> 
                                 </Button>
-                                <Button onClick={nextRotation}>
+                                <Button onClick={nextRotation} disabled={disabled}>
                                     <img src={rotateIcon} alt="rotate icon" className="w-6" /> 
                                 </Button>
                                 
                             </div>
-                            <button onClick={handleClosePreview} className="absolute right-2 top-2">
+                            <button onClick={handleClosePreview} className="absolute right-2 top-2" disabled={disabled}>
                                     <img src={closeIcon} alt="close icon" className="w-6" /> 
                             </button>
                         </div>
@@ -133,7 +119,7 @@ export const PdfPreviewer = ({file,fileName,blobName,setFieldValue}) => {
             {
                 pdfDoc&&
                     <div className="static">
-                        <Button onClick={handleConvertCanvasToBlob}>
+                        <Button onClick={handleConvertCanvasToBlob} disabled={disabled} >
                             Elegir esta vista previa
                         </Button>
                     </div>

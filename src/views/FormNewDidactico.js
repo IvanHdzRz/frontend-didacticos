@@ -52,7 +52,7 @@ export const FormNewDidactico = () => {
                 {({errors,touched,setFieldValue,setFieldError,setFieldTouched,values,isSubmitting})=>(
                     <Form className="mt-8  w-11/12	mx-auto rounded-lg px-4 py-8 grid grid-cols-2 gap-x-4 gap-y-6 bg-white">
                         
-                        <Field name="numero" component={InputText} label="Numero"/>
+                        <Field name="numero" component={InputText} label="Numero" disabled={isSubmitting}/>
                         <Field 
                             name="tipo"
                             label="tipo"
@@ -62,17 +62,18 @@ export const FormNewDidactico = () => {
                                 {name:'monografia',value:'mngf'},
                                 {name:'biografia',value:'bgrf'},
                             ]} 
+                            disabled={isSubmitting}
                         /> 
                         <div className='col-span-2'>
-                            <Field name="titulo" component={InputText} label="titulo" />
+                            <Field name="titulo" component={InputText} label="titulo" disabled={isSubmitting}/>
                         </div>
-                        <Field  name="existencias" component={InputText} label="existencias"/> 
+                        <Field  name="existencias" component={InputText} label="existencias" disabled={isSubmitting}/> 
                         
                         {
                             values.pdf?
                                 <div className="col-span-2">
                                     <Label forName="preview" label="Selecciona una vista previa"/>
-                                    <PdfPreviewer file={values.pdf} fileName="pdf" blobName="img" setFieldValue={setFieldValue}/>
+                                    <PdfPreviewer file={values.pdf} fileName="pdf" blobName="img" setFieldValue={setFieldValue} disabled={isSubmitting}/>
                                     {
                                         errors.img && touched.img &&
                                         <WarningLabel forName="pdf" warnMessage={errors.img} />
