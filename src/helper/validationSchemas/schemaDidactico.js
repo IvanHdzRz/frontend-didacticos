@@ -18,9 +18,14 @@ export const schemaDidactico = yup.object().shape({
         .integer('debe ser un numero entero')
         .required('este campo es requerido'),
     titulo: yup
-        .string()    
+        .string()
+        .trim()    
         .required('debes especificar un titulo'),
     pdf: yup.mixed().required('debes escoger un documento'),
     img: yup.mixed().required('debes escoger una previsualizacion '),
+    tags: yup
+        .string()
+        .trim()
+        .required('debes colocar por lo menos un tag'),
 })
 

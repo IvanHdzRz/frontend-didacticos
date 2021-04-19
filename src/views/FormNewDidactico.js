@@ -10,6 +10,7 @@ import { SubmitButton } from '../components/SubmitButton'
 import { PdfPreviewer } from '../components/PdfPreviewer'
 import { Label } from '../components/Label'
 import {apiUrl} from '../env/apiurl'
+import { TagContainer } from '../components/TagContainer'
 
 /*TODO 
     DISABLED all inputs while is Submittig
@@ -17,10 +18,19 @@ import {apiUrl} from '../env/apiurl'
 */
 
 export const FormNewDidactico = () => {
-    const formInitialValue={numero:'',tipo:'',titulo:'',existencias:0,pdf:null,img:null}
+    const formInitialValue={numero:'',tipo:'',titulo:'',existencias:0,pdf:null,img:null,tags:''}
     const handleSubmit=(values, {setSubmitting,resetForm}) =>{
-        const {existencias,numero,tipo,titulo:nombre,pdf,img}=values
-        const didactico={existencias,numero,tipo,nombre,tags:['ejemplo','prueba 1']}
+        const {existencias,numero,tipo,titulo:nombre,pdf,img,tags}=values
+        const didactico={
+            existencias,
+            numero,
+            tipo,
+            nombre,
+            tags: tags
+                .trim()
+                .split(' ')
+                .filter(tag=>tag!==' '&&tag!=='')
+        }
         const formData=new FormData();
         
         formData.append("didactico",JSON.stringify(didactico))
@@ -32,7 +42,7 @@ export const FormNewDidactico = () => {
             redirect:'follow',
             body:formData
         }
-
+        console.log(didactico)
         fetch(`${apiUrl}/didacticos`,options)
             .then(res=>res.text())
             .then(result=>{
@@ -94,6 +104,10 @@ export const FormNewDidactico = () => {
                                     }
                                 </div>
                         }
+                        <div className="col-span-2">
+                            <Field  name="tags" component={TagContainer} label="Tags" disabled={isSubmitting}/>
+                        </div>
+
                         <div className="col-span-2">
                             <SubmitButton isSubmiting={isSubmitting} />
                         </div>
