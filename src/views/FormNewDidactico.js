@@ -13,7 +13,7 @@ import {apiUrl} from '../env/apiurl'
 import { TagContainer } from '../components/TagContainer'
 
 /*TODO 
-    DISABLED all inputs while is Submittig
+    conect options of didactico with option in api
 
 */
 
@@ -72,6 +72,7 @@ export const FormNewDidactico = () => {
                                 {name:'Selecciona',value:''},
                                 {name:'monografia',value:'mngf'},
                                 {name:'biografia',value:'bgrf'},
+                                {name:'mapa', value:'mapa'}
                             ]} 
                             disabled={isSubmitting}
                         /> 
