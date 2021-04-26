@@ -46,7 +46,7 @@ export const SearchDidactico = () => {
                             {data.length} Resultado{data.length!==1&&'s'} para:<span className="text-pink-500">"{lastSearch}"</span> 
                         </p>
                         <div id="didacticosContainer">
-                            {data.map(didactico=>(
+                            {data.map((didactico,i)=>(
                                 <Didactico 
                                     key={`${didactico.tipo}${didactico.numero}`}
                                     number={didactico.numero} 
@@ -54,6 +54,7 @@ export const SearchDidactico = () => {
                                     type={didactico.tipo} 
                                     stock={didactico.existencias} 
                                     stockLevel={didactico['nivel de stock']}
+                                    delayAnimation={i}
                                 />
                             ))}
                         </div>
