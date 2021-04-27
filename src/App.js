@@ -1,10 +1,9 @@
-import {SearchDidactico} from './views/SearchDidactico'
-
-import { FormNewDidactico } from './views/FormNewDidactico';
-
+/* import {SearchDidactico} from './views/SearchDidactico'
+import { FormNewDidactico } from './views/FormNewDidactico'; */
+import {DetailsDidactico} from './views/DetailsDidactico'
 function App() {
   return (
-    <SearchDidactico />
+    <DetailsDidactico numero={2} tipo="mapa" />
   );
 }
 
