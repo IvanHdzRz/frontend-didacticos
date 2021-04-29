@@ -2,11 +2,9 @@ import React from 'react'
 
 export const Didactico = ({number,title,type,stock,stockLevel,delayAnimation}) => {
     
-    const delay={
-        ['--order']:delayAnimation
-    }
+    
     return (
-        <div className="animate-showUp opacity-0 bg-white mb-1 grid grid-cols-12 place-items-center py-4  px-2 gap-x-2 " style={delay} >
+        <div className="animate-showUp opacity-0 bg-white mb-1 grid grid-cols-12 place-items-center py-4  px-2 gap-x-2 " style={{['--order']:delayAnimation}} >
             <p className='col-span-1 text-gray-500'> 
                 {number}
             </p>

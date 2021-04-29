@@ -6,6 +6,7 @@ import {apiUrl} from '../env/apiurl'
 import {getApiQueryParams} from '../helper/getApiQueryParams'
 import loadIcon  from '../assets/icons/load.png'
 import { Didactico } from '../components/Didactico'
+import { FloatButtonAdd } from '../components/FloatButtonAdd'
 
 export const SearchDidactico = () => {
     const [lastSearch, setlastSearch] = useState('')
@@ -58,8 +59,10 @@ export const SearchDidactico = () => {
                                 />
                             ))}
                         </div>
+                        
                     </div>
             }
+            <FloatButtonAdd />
         </div>
     )
 }
