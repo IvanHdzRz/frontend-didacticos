@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import {Link} from "react-router-dom";
 import {SeccionTitle} from '../components/SeccionTitle'
 import {SearchBar} from '../components/SearchBar'
 import {useFetch} from '../hooks/useFetch'
@@ -7,6 +8,7 @@ import {getApiQueryParams} from '../helper/getApiQueryParams'
 import loadIcon  from '../assets/icons/load.png'
 import { Didactico } from '../components/Didactico'
 import { FloatButtonAdd } from '../components/FloatButtonAdd'
+
 
 export const SearchDidactico = () => {
     const [lastSearch, setlastSearch] = useState('')
@@ -48,15 +50,20 @@ export const SearchDidactico = () => {
                         </p>
                         <div id="didacticosContainer">
                             {data.map(({tipo,numero,nombre,existencias,nivelStock},i)=>(
-                                <Didactico 
+                                <Link 
                                     key={`${tipo}${numero}`}
-                                    number={numero} 
-                                    title={nombre} 
-                                    type={tipo} 
-                                    stock={existencias} 
-                                    stockLevel={nivelStock}
-                                    delayAnimation={i}
-                                />
+                                    to={`/detalles?tipo=${tipo}&numero=${numero}`}
+                                >
+                                    <Didactico 
+                                        number={numero} 
+                                        title={nombre} 
+                                        type={tipo} 
+                                        stock={existencias} 
+                                        stockLevel={nivelStock}
+                                        delayAnimation={i}
+                                    />
+                                </Link>
+                                
                             ))}
                         </div>
                         

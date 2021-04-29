@@ -1,13 +1,17 @@
 import React from 'react'
+import {useLocation} from "react-router-dom";
 import {SeccionTitle} from '../components/SeccionTitle'
 import {apiUrl} from '../env/apiurl'
 import { useFetch } from '../hooks/useFetch'
 import printIcon from '../assets/icons/printing.png'
 
-export const DetailsDidactico = ({numero, tipo}) => {
+export const DetailsDidactico = () => {
+    const query = useQuery();
+    const numero=query.get('numero')
+    const tipo=query.get('tipo')
     const {data,loading,error}=useFetch(`${apiUrl}/didacticos/id?tipo=${tipo}&numero=${numero}`)
    
-     const {nombre,img,pdf,existencias,nivelStock,tags}=data || {}
+    const {nombre,img,pdf,existencias,nivelStock,tags}=data || {}
      console.log(data)
     
     return (
@@ -57,4 +61,7 @@ export const DetailsDidactico = ({numero, tipo}) => {
             }
         </div>
     )
+}
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
 }
