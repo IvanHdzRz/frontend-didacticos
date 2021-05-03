@@ -12,7 +12,7 @@ import { FloatButtonAdd } from '../components/FloatButtonAdd'
 
 export const SearchDidactico = () => {
     const [lastSearch, setlastSearch] = useState('')
-    const [url, seturl] = useState(null)
+    const [url, seturl] = useState(`${apiUrl}/didacticos/low_stock`)
     const [keyWords, setkeyWords] = useState('')
     const {data,loading}=useFetch(url)
     const handleChange=({target})=>{
@@ -46,7 +46,12 @@ export const SearchDidactico = () => {
                     :
                     <div id="results" className="p-4">
                         <p className="text-gray-500 text-lg font-bold mb-4">
-                            {data.length} Resultado{data.length!==1&&'s'} para:<span className="text-pink-500">"{lastSearch}"</span> 
+                            {
+                                lastSearch===''? 
+                                <> Didacticos con bajas existencias</> :
+                                <>{data.length} Resultado{data.length!==1&&'s'} para:<span className="text-pink-500">"{lastSearch}"</span></>
+                            }
+                             
                         </p>
                         <div id="didacticosContainer">
                             {data.map(({tipo,numero,nombre,existencias,nivelStock},i)=>(
