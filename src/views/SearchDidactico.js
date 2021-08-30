@@ -5,9 +5,10 @@ import {SearchBar} from '../components/SearchBar'
 import {useFetch} from '../hooks/useFetch'
 import {apiUrl} from '../env/apiurl'
 import {getApiQueryParams} from '../helper/getApiQueryParams'
-import loadIcon  from '../assets/icons/load.png'
+
 import { Didactico } from '../components/Didactico'
 import { FloatButtonAdd } from '../components/FloatButtonAdd'
+import { LoadingSpinner } from '../components/LoadingSpinner';
 
 
 export const SearchDidactico = () => {
@@ -40,9 +41,7 @@ export const SearchDidactico = () => {
             </form>
             {
                 loading?
-                    <div className='w-full h-80 flex justify-center items-center'>
-                        <img src={loadIcon} alt='cargando' className='h-12 w-12 opacity-50 animate-spin' />
-                    </div>
+                    <LoadingSpinner />
                     :
                     <div id="results" className="p-4">
                         <p className="text-gray-500 text-lg font-bold mb-4">
