@@ -1,0 +1,43 @@
+.modalBackground{
+  background-color: rgba(0,0,0,0.01);  
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  animation: fadeIn .3s linear;
+  animation-fill-mode: forwards;
+  
+}
+@keyframes fadeIn {
+  from{
+    background-color: rgba(0,0,0,0.01);
+  }
+  to{
+    background-color: rgba(0,0,0,0.4);
+  }
+}
+.modalBody{
+  background: white;
+  border-radius: 1rem;
+  padding: 1rem;
+  width: max-content;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.modalClose{
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  border: none;
+  background: none;
+  padding: 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  
+
+}

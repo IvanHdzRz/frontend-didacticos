@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {InputText} from '../components/InputText'
 import {SeccionTitle} from '../components/SeccionTitle'
 import {Formik,Form,Field} from 'formik'
@@ -15,12 +15,22 @@ import { useFetch } from '../hooks/useFetch'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import {initialFormDidacticoValues} from '../reducers/appReducer'
 import { ErrorScreen } from '../components/ErrorScreen'
+import { Modal } from '../components/Modal'
 
 export const FormNewDidactico = ({edit=false,initialValues=initialFormDidacticoValues}) => {
+    const [modalIsShowing, setmodalIsShowing] = useState(false)
+    const [modalMessage, setmodalMessage] = useState("")
+    const formInitialValue=initialValues
+    /* const {data:options,loading,error}=useFetch(`${apiUrl}/tipos`) */
+    const options=[
+        {
+            id:'mapa',
+            nombre:'mapa'
+        }
+    ]
     
-    const formInitialValue={numero:'',tipo:'',titulo:'',existencias:0,pdf:null,img:null,tags:''}
-    const {data:options,loading,error}=useFetch(`${apiUrl}/tipos`)
-    
+    const loading=false;
+    const error=false;
     const handleSubmit=(values, {setSubmitting,resetForm}) =>{
         const {existencias,numero,tipo,titulo:nombre,pdf,img,tags}=values
         const didactico={
@@ -40,7 +50,7 @@ export const FormNewDidactico = ({edit=false,initialValues=initialFormDidacticoV
         formData.append("img",img,"didactico_img.png")
         console.log(img)
         const options={
-            method:'POST',
+            method:edit?'PUT':'POST',
             redirect:'follow',
             body:formData
         }
@@ -54,13 +64,16 @@ export const FormNewDidactico = ({edit=false,initialValues=initialFormDidacticoV
             })
             .catch(e=>{
                 console.log(e)
+                setSubmitting(false)
+                setmodalMessage("Error Cao")
+                setmodalIsShowing(true)
             })
             
     }
 
     return (
         <div className="bg-gray-100 min-h-screen pb-8">
-            <SeccionTitle title="Agregar nuevo didactico"/>
+            <SeccionTitle title={edit?"Editar Didactico":"Agregar nuevo didactico"}/>
             {loading?
                 <LoadingSpinner/>:
                 error?
@@ -70,7 +83,7 @@ export const FormNewDidactico = ({edit=false,initialValues=initialFormDidacticoV
                         {({errors,touched,setFieldValue,setFieldError,setFieldTouched,values,isSubmitting})=>(
                             <Form className="mt-8  w-11/12	mx-auto rounded-lg px-4 py-8 grid grid-cols-2 gap-x-4 gap-y-6 bg-white">
                                 
-                                <Field name="numero" component={InputText} label="Numero" disabled={isSubmitting}/>
+                                <Field name="numero" component={InputText} label="Numero" disabled={isSubmitting||edit}/>
                                 <Field 
                                     name="tipo"
                                     label="tipo"
@@ -80,7 +93,7 @@ export const FormNewDidactico = ({edit=false,initialValues=initialFormDidacticoV
                                             return {name:nombre,value:id}
                                         })
                                     } 
-                                    disabled={isSubmitting}
+                                    disabled={isSubmitting || edit}
                                 /> 
                                 <div className='col-span-2'>
                                     <Field name="titulo" component={InputText} label="titulo" disabled={isSubmitting}/>
@@ -123,6 +136,15 @@ export const FormNewDidactico = ({edit=false,initialValues=initialFormDidacticoV
                     </Formik>
                     
             }
+            {
+
+                modalIsShowing && 
+                    <Modal close={()=>{setmodalIsShowing(false)}}>
+                        <ErrorScreen />
+                    </Modal>
+            }
+
+            
         </div>
     )
 }
