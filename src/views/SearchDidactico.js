@@ -9,13 +9,14 @@ import {getApiQueryParams} from '../helper/getApiQueryParams'
 import { Didactico } from '../components/Didactico'
 import { FloatButtonAdd } from '../components/FloatButtonAdd'
 import { LoadingSpinner } from '../components/LoadingSpinner';
+import { ErrorScreen } from '../components/ErrorScreen';
 
 
 export const SearchDidactico = () => {
     const [lastSearch, setlastSearch] = useState('')
     const [url, seturl] = useState(`${apiUrl}/didacticos/low_stock`)
     const [keyWords, setkeyWords] = useState('')
-    const {data,loading}=useFetch(url)
+    const {data,loading,error}=useFetch(url)
     const handleChange=({target})=>{
         setkeyWords(target['value'])
     }
@@ -27,7 +28,7 @@ export const SearchDidactico = () => {
         seturl(`${apiUrl}/didacticos/search?${queryParams}`)
     }
 
-    !loading&&console.log(data)
+    
     return (
         <div className="bg-gray-100 min-h-screen pb-8">
             <div className="mb-4">
@@ -43,35 +44,37 @@ export const SearchDidactico = () => {
                 loading?
                     <LoadingSpinner />
                     :
-                    <div id="results" className="p-4">
-                        <p className="text-gray-500 text-lg font-bold mb-4">
-                            {
-                                lastSearch===''? 
-                                <> Didacticos con bajas existencias</> :
-                                <>{data.length} Resultado{data.length!==1&&'s'} para:<span className="text-pink-500">"{lastSearch}"</span></>
-                            }
-                             
-                        </p>
-                        <div id="didacticosContainer">
-                            {data.map(({tipo,numero,nombre,existencias,nivelStock},i)=>(
-                                <Link 
-                                    key={`${tipo}${numero}`}
-                                    to={`/detalles?tipo=${tipo}&numero=${numero}`}
-                                >
-                                    <Didactico 
-                                        number={numero} 
-                                        title={nombre} 
-                                        type={tipo} 
-                                        stock={existencias} 
-                                        stockLevel={nivelStock}
-                                        delayAnimation={i}
-                                    />
-                                </Link>
+                    error?
+                        <ErrorScreen />:
+                        <div id="results" className="p-4">
+                            <p className="text-gray-500 text-lg font-bold mb-4">
+                                {
+                                    lastSearch===''? 
+                                    <> Didacticos con bajas existencias</> :
+                                    <>{data.length} Resultado{data.length!==1&&'s'} para:<span className="text-pink-500">"{lastSearch}"</span></>
+                                }
                                 
-                            ))}
+                            </p>
+                            <div id="didacticosContainer">
+                                {data.map(({tipo,numero,nombre,existencias,nivelStock},i)=>(
+                                    <Link 
+                                        key={`${tipo}${numero}`}
+                                        to={`/detalles?tipo=${tipo}&numero=${numero}`}
+                                    >
+                                        <Didactico 
+                                            number={numero} 
+                                            title={nombre} 
+                                            type={tipo} 
+                                            stock={existencias} 
+                                            stockLevel={nivelStock}
+                                            delayAnimation={i}
+                                        />
+                                    </Link>
+                                    
+                                ))}
+                            </div>
+                            
                         </div>
-                        
-                    </div>
             }
             <FloatButtonAdd />
         </div>

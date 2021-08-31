@@ -31,11 +31,11 @@ export const useFetch = ( url ) => {
                 }
 
             })
-            .catch( () => {
+            .catch( (e) => {
                 setState({
                     data: null,
                     loading: false,
-                    error: 'No se pudo cargar la info'
+                    error: e
                 })
             })
 
