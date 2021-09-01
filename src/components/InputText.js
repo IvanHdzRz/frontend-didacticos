@@ -2,7 +2,7 @@ import React from 'react'
 import { Label } from './Label'
 import { WarningLabel } from './WarningLabel'
 
-export const InputText = ({ field:{name,value,onChange,onBlur} ,form:{touched,errors},label,disabled}) => {
+export const InputText = ({ field:{name,value,onChange,onBlur} ,form:{touched,errors},label,disabled,isPassword=false}) => {
     return (
         <div>
             <Label forName={name} label={label} />
@@ -10,7 +10,7 @@ export const InputText = ({ field:{name,value,onChange,onBlur} ,form:{touched,er
                 id={name}
                 name={name} 
                 value={value}
-                type="text"
+                type={isPassword?"password":"text"}
                 className={`
                     h-10  px-2 w-full mt-2 mb-1
                     text-xl

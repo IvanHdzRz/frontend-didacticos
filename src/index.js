@@ -3,17 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import { FormNewDidactico } from './views/FormNewDidactico';
+import { Login } from './views/Login';
 
 
 ReactDOM.render(
   <React.StrictMode>
-    {/* <App /> */}
-    <FormNewDidactico  
-      edit
-      initialValues={
-        {numero:'123',tipo:'mapa',titulo:'la conquista',existencias:12,pdf:null,img:null,tags:'cosas cosas2 1'}
-      }
-    />
+    {/* <Login/>  */}
+    <App></App>
   </React.StrictMode>,
   document.getElementById('root')
 );

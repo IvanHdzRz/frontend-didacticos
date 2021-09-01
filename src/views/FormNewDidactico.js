@@ -21,16 +21,8 @@ export const FormNewDidactico = ({edit=false,initialValues=initialFormDidacticoV
     const [modalIsShowing, setmodalIsShowing] = useState(false)
     const [modalMessage, setmodalMessage] = useState("")
     const formInitialValue=initialValues
-    /* const {data:options,loading,error}=useFetch(`${apiUrl}/tipos`) */
-    const options=[
-        {
-            id:'mapa',
-            nombre:'mapa'
-        }
-    ]
+    const {data:options,loading,error}=useFetch(`${apiUrl}/tipos`)
     
-    const loading=false;
-    const error=false;
     const handleSubmit=(values, {setSubmitting,resetForm}) =>{
         const {existencias,numero,tipo,titulo:nombre,pdf,img,tags}=values
         const didactico={
@@ -129,7 +121,7 @@ export const FormNewDidactico = ({edit=false,initialValues=initialFormDidacticoV
                                 </div>
 
                                 <div className="col-span-2">
-                                    <SubmitButton isSubmiting={isSubmitting} />
+                                    <SubmitButton isSubmiting={isSubmitting} text="guardar" onSubmitText="guardando" />
                                 </div>
                             </Form>
                         )}
