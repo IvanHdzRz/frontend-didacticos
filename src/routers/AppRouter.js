@@ -9,26 +9,20 @@ import { DetailsDidactico } from "../views/DetailsDidactico";
 import { FormNewDidactico } from "../views/FormNewDidactico";
 import { Login } from "../views/Login";
 import { SearchDidactico } from "../views/SearchDidactico";
+import { PrivateRoute } from "./PrivateRoute";
 
 export const AppRouter = () => {
     return (
         <Router>
             <div>
                 <Switch>
-                    <Route exact path='/'>
-                        <SearchDidactico />
-                    </Route>
-                    <Route exact path='/agregar' >
-                        <FormNewDidactico />
-                    </Route>
-                    <Route exact path='/detalles'>
-                        <DetailsDidactico tipo='mapa' numero='2' />
-                    </Route>
-                    <Route exact path="/login">
-                        <Login />
-                    </Route>
+                    <PrivateRoute exact path='/'  component={SearchDidactico} />
+                    <PrivateRoute exact path='/agregar'  component={FormNewDidactico} />
+                    <PrivateRoute exact path='/detalles' component={DetailsDidactico} />
+                    <Route exact path="/login" component={Login} />
                 </Switch>
             </div>
         </Router>
+        
     )
 }
