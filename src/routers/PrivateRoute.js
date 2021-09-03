@@ -4,12 +4,20 @@ import AppContext from '../context/appContext'
 
 
 
-export const PrivateRoute = ({exact,path,component:Component}) => {
+export const PrivateRoute = ({exact,path,component:Component, routePermission=true}) => {
     const{state}= useContext(AppContext)
-    const {authToken}=state
+    const {authToken,userPermissions}=state
+    
     return (
         <Route exact={exact} path={path}>
-            {authToken?<Component />:<Redirect to="/login" />}
+            {authToken===null?   
+                <Redirect to="/login" />:
+                routePermission===true? 
+                    <Component />:
+                    userPermissions.includes(routePermission)?
+                        <Component />:
+                        <Redirect to="/"/>    
+            }
         </Route>
     )
 }

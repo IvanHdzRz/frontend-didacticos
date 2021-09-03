@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {InputText} from '../components/InputText'
 import {SeccionTitle} from '../components/SeccionTitle'
 import {Formik,Form,Field} from 'formik'
@@ -16,12 +16,21 @@ import { LoadingSpinner } from '../components/LoadingSpinner'
 import {initialFormDidacticoValues} from '../reducers/appReducer'
 import { ErrorScreen } from '../components/ErrorScreen'
 import { Modal } from '../components/Modal'
+import { getAuthHeader } from '../helper/getAuthHeader'
+import AppContext from '../context/appContext'
 
 export const FormNewDidactico = ({edit=false,initialValues=initialFormDidacticoValues}) => {
     const [modalIsShowing, setmodalIsShowing] = useState(false)
     const [modalMessage, setmodalMessage] = useState("")
+    const {state}= useContext(AppContext)
+    const {authToken}=state
     const formInitialValue=initialValues
-    const {data:options,loading,error}=useFetch(`${apiUrl}/tipos`)
+    const fetchOptions={
+        method: 'GET',
+        headers: getAuthHeader({authToken}),
+        redirect: 'follow'
+    }
+    const {data:options,loading,error}=useFetch(`${apiUrl}/tipos`,fetchOptions)
     
     const handleSubmit=(values, {setSubmitting,resetForm}) =>{
         const {existencias,numero,tipo,titulo:nombre,pdf,img,tags}=values

@@ -1,7 +1,6 @@
 import {  Field, Form, Formik } from 'formik'
 import React, { useContext, useState } from 'react'
-import { useHistory } from 'react-router-dom'
-import TYPES from '../actions/appActions'
+import TYPES from '../types/appActions'
 import { InputText } from '../components/InputText'
 import { SeccionTitle } from '../components/SeccionTitle'
 import { SubmitButton } from '../components/SubmitButton'
@@ -9,14 +8,11 @@ import { WarningLabel } from '../components/WarningLabel'
 import AppContext from '../context/appContext'
 import { apiUrl } from '../env/apiurl'
 import { schemaLogin } from '../helper/validationSchemas/schemaLogin'
+import jwt from 'jsonwebtoken'
 
 export const Login = () => {
-    const{state,dispatch}= useContext(AppContext)
-    const {authToken}=state
-    const history=useHistory()
-    if(authToken){
-        history.push("/");
-    }
+    const{dispatch}= useContext(AppContext)
+    
     const [errorToLogin, setErrorToLogin] = useState({error:false,message:""});
     const {error,message}=errorToLogin
     
@@ -41,9 +37,16 @@ export const Login = () => {
             response.status===503&&setErrorToLogin({error:true,message:"Oops, tenemos un problema, intentalo mas tarde"})
             const {token}=await response.json();
             if(response.status===201){
-                console.log(token)
-                dispatch({type:TYPES.SET_AUTH_TOKEN,payload:token})
-                history.push("/");
+                const decode= jwt.decode(token)
+                
+                dispatch({
+                    type:TYPES.SET_AUTH_DATA,
+                    payload:{
+                        authToken:token,
+                        userName:decode.userName,
+                        userPermissions:decode.userPermissions
+                    }
+                })
             }
             
         }catch(e){

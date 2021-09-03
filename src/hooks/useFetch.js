@@ -1,7 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
 
+const  headers = new Headers();
+headers.append("Content-Type", "application/json");
 
-export const useFetch = ( url ) => {
+const defaultOptions={
+    method: 'GET',
+    headers: headers,
+    redirect: 'follow'
+};
+
+
+export const useFetch = ( url,options=defaultOptions) => {
     
     const isMounted = useRef(true);
     const [state, setState] = useState({ data: null, loading: true, error: null });
@@ -18,7 +27,7 @@ export const useFetch = ( url ) => {
 
         setState({ data: null, loading: true, error: null });
         if(url!==null){
-            fetch( url )
+            fetch( url,options )
             .then( resp => resp.json() )
             .then( data => {
 

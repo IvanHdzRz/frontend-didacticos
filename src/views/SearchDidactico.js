@@ -20,6 +20,7 @@ export const SearchDidactico = () => {
     const handleChange=({target})=>{
         setkeyWords(target['value'])
     }
+    
     const handleSearch=(e)=>{
         e.preventDefault();
         console.log('voy a buscar')
