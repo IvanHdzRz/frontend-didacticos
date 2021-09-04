@@ -6,7 +6,9 @@ export const Modal = ({children,close}) => {
         <div className={Style.modalBackground} onClick={(e)=>{e.target === e.currentTarget && close() }}>
             <div className={Style.modalBody}>
                 <button onClick={close}className={Style.modalClose}>X</button>
-                {children}
+                <div className={Style.modalContent}>
+                    {children}
+                </div>
             </div>
         </div>
     )

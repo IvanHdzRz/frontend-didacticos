@@ -9,6 +9,9 @@ import AppContext from '../context/appContext'
 import { apiUrl } from '../env/apiurl'
 import { schemaLogin } from '../helper/validationSchemas/schemaLogin'
 import jwt from 'jsonwebtoken'
+import { Modal } from '../components/Modal'
+import { ErrorConnection } from '../components/ErrorConnection'
+import { useModal } from '../hooks/useModal'
 
 export const Login = () => {
     const{dispatch}= useContext(AppContext)
@@ -16,6 +19,8 @@ export const Login = () => {
     const [errorToLogin, setErrorToLogin] = useState({error:false,message:""});
     const {error,message}=errorToLogin
     
+    const [isVisible,openModal,closeModal]=useModal({visible:false})
+
     const initialValues={
         username:"",
         password:""
@@ -51,7 +56,7 @@ export const Login = () => {
             
         }catch(e){
             setErrorToLogin({error:true,message:"Oops, tenemos un problema, intentalo mas tarde"})
-            console.log(e)
+            openModal();
         }
           
     }
@@ -60,16 +65,23 @@ export const Login = () => {
         <div className="bg-gray-100 min-h-screen pb-8 flex flex-col justify-center">
             <SeccionTitle title="Login"/>
             <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={schemaLogin}>
-                {({isSubmitting})=>(
-                    <Form className="mt-8  w-11/12	mx-auto rounded-lg px-4 py-8 flex flex-col bg-white space-y-6">
-                        {error&&<WarningLabel forName="" warnMessage={message} /> }
-                        <Field name="username" component={InputText} label="Usuario"  />
-                        <Field name="password" component={InputText} label="Contraseña" isPassword  />
-                        <SubmitButton text="Ingresar" onSubmitText="Ingresando" isSubmiting={isSubmitting}/>
-                    </Form>
+                {({isSubmitting,submitForm})=>(
+                    <>
+                        <Form className="mt-8  w-11/12	mx-auto rounded-lg px-4 py-8 flex flex-col bg-white space-y-6">
+                            {error&&<WarningLabel forName="" warnMessage={message} /> }
+                            <Field name="username" component={InputText} label="Usuario"  />
+                            <Field name="password" component={InputText} label="Contraseña" isPassword  />
+                            <SubmitButton text="Ingresar" onSubmitText="Ingresando" isSubmiting={isSubmitting}/>
+                        </Form>
+                        {
+                        isVisible&&
+                            <Modal close={closeModal}>
+                                <ErrorConnection onRetry={submitForm}/>
+                            </Modal>
+                        }
+                    </>
                 )}
             </Formik>
-            
         </div>
     )
 }

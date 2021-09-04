@@ -20,12 +20,12 @@ export const ErrorScreen = ({icon=errorIcon,title="Ooops!", message="Ha ocurrido
     }
     
     return (
-        <div className="text-gray-700 flex  flex-col justify-center items-center h-screen w-screen space-y-5 p-5">
-            <img src={icon} alt="error-icon" className="w-32"/>
-            <h3 className="text-3xl font-extrabold text-center">
+        <div className="text-gray-700 flex  flex-col justify-center items-center w-60 space-y-5">
+            <img src={icon} alt="error-icon" className="w-28"/>
+            <h3 className="text-3xl font-extrabold text-center flex">
                 {title}
             </h3>
-            <p className="font-light text-xl text-center">
+            <p className="font-light text-base text-center flex">
                 {message}
             </p>
             <button onClick={handleClick} className="flex space-x-4 border border-gray-600 rounded p-2 font-medium">
