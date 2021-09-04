@@ -26,7 +26,35 @@ export const useFetch = ( url,options=defaultOptions) => {
     useEffect( () => {
 
         setState({ data: null, loading: true, error: null });
-        if(url!==null){
+        const fetchData=async()=>{
+            try{
+                const req=await fetch(url,options)
+                const statusCode=req.status;
+                const data=await req.json();
+                if(isMounted.current){
+                    setState({
+                        loading: false,
+                        error: null,
+                        data,
+                        statusCode: statusCode
+                    });
+                }
+            }catch(e){
+                if(isMounted.current){
+                    setState({
+                        data: null,
+                        loading: false,
+                        error: e,
+                        statusCode:null
+                    })
+                }
+            }
+            
+        }
+
+        url!==null&&fetchData();
+
+        /* if(url!==null){
             fetch( url,options )
             .then( resp => resp.json() )
             .then( data => {
@@ -48,7 +76,7 @@ export const useFetch = ( url,options=defaultOptions) => {
                 })
             })
 
-        }
+        } */
 
         
     },[url])

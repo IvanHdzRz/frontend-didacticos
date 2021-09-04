@@ -53,6 +53,7 @@ export const FormNewDidactico = ({edit=false,initialValues=initialFormDidacticoV
         const options={
             method:edit?'PUT':'POST',
             redirect:'follow',
+            headers:getAuthHeader({authToken}),
             body:formData
         }
         console.log(didactico)

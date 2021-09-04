@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {Link} from "react-router-dom";
 import {SeccionTitle} from '../components/SeccionTitle'
 import {SearchBar} from '../components/SearchBar'
@@ -10,13 +10,22 @@ import { Didactico } from '../components/Didactico'
 import { FloatButtonAdd } from '../components/FloatButtonAdd'
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ErrorScreen } from '../components/ErrorScreen';
+import { getAuthHeader } from '../helper/getAuthHeader';
+import AppContext from '../context/appContext';
 
 
 export const SearchDidactico = () => {
+    const {state}= useContext(AppContext)
+    const {authToken}=state
     const [lastSearch, setlastSearch] = useState('')
     const [url, seturl] = useState(`${apiUrl}/didacticos/low_stock`)
     const [keyWords, setkeyWords] = useState('')
-    const {data,loading,error}=useFetch(url)
+    const {data,loading,error,statusCode}=useFetch(url,{
+        method: 'GET',
+        headers: getAuthHeader({authToken}),
+        redirect: 'follow'
+    })
+    
     const handleChange=({target})=>{
         setkeyWords(target['value'])
     }
@@ -29,7 +38,7 @@ export const SearchDidactico = () => {
         seturl(`${apiUrl}/didacticos/search?${queryParams}`)
     }
 
-    
+    console.log(statusCode)
     return (
         <div className="bg-gray-100 min-h-screen pb-8">
             <div className="mb-4">
