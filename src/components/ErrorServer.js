@@ -1,9 +1,9 @@
 import React from 'react'
-import { ErrorScreen } from './ErrorScreen'
+import { InformationScreen } from './InformationScreen'
 import iconErrServer from '../assets/icons/alert.png'
 export const ErrorServer = () => {
     return (
-        <ErrorScreen 
+        <InformationScreen 
             icon={iconErrServer}
             title="Servidor no disponible"
             message="Nuestros servidores estan en llamas, intentalo mas tarde"

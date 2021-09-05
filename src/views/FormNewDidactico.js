@@ -14,10 +14,11 @@ import { TagContainer } from '../components/TagContainer'
 import { useFetch } from '../hooks/useFetch'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import {initialFormDidacticoValues} from '../reducers/appReducer'
-import { ErrorScreen } from '../components/ErrorScreen'
+import { InformationScreen } from '../components/InformationScreen'
 import { Modal } from '../components/Modal'
 import { getAuthHeader } from '../helper/getAuthHeader'
 import AppContext from '../context/appContext'
+import { ErrorScreen } from '../components/ErrorScreen'
 
 export const FormNewDidactico = ({edit=false,initialValues=initialFormDidacticoValues}) => {
     const [modalIsShowing, setmodalIsShowing] = useState(false)
@@ -30,7 +31,7 @@ export const FormNewDidactico = ({edit=false,initialValues=initialFormDidacticoV
         headers: getAuthHeader({authToken}),
         redirect: 'follow'
     }
-    const {data:options,loading,error}=useFetch(`${apiUrl}/tipos`,fetchOptions)
+    const {data:options,loading,error,statusCode,refresh}=useFetch(`${apiUrl}/tipos`,fetchOptions)
     
     const handleSubmit=(values, {setSubmitting,resetForm}) =>{
         const {existencias,numero,tipo,titulo:nombre,pdf,img,tags}=values
@@ -78,9 +79,11 @@ export const FormNewDidactico = ({edit=false,initialValues=initialFormDidacticoV
             <SeccionTitle title={edit?"Editar Didactico":"Agregar nuevo didactico"}/>
             {loading?
                 <LoadingSpinner/>:
-                error?
-                    <ErrorScreen />:
-                        
+                error||statusCode!==200?
+                    <div className="w-full min-h-screen flex justify-center items-center">
+                        <ErrorScreen error={error} statusCode={statusCode} onRetry={refresh}/>
+                    </div>
+                    :
                     <Formik initialValues={formInitialValue} onSubmit={handleSubmit} validationSchema= {schemaDidactico} >
                         {({errors,touched,setFieldValue,setFieldError,setFieldTouched,values,isSubmitting})=>(
                             <Form className="mt-8  w-11/12	mx-auto rounded-lg px-4 py-8 grid grid-cols-2 gap-x-4 gap-y-6 bg-white">
@@ -142,7 +145,7 @@ export const FormNewDidactico = ({edit=false,initialValues=initialFormDidacticoV
 
                 modalIsShowing && 
                     <Modal close={()=>{setmodalIsShowing(false)}}>
-                        <ErrorScreen />
+                        <InformationScreen />
                     </Modal>
             }
 

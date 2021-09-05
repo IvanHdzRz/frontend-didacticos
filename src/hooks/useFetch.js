@@ -14,7 +14,11 @@ export const useFetch = ( url,options=defaultOptions) => {
     
     const isMounted = useRef(true);
     const [state, setState] = useState({ data: null, loading: true, error: null });
-
+    const [fetchAgain, setfetchAgain] = useState(true)
+    const refresh=()=>{
+        setfetchAgain((prevState)=>!prevState)
+    }
+    
     useEffect( () => {
         isMounted.current=true
         return () => {
@@ -79,7 +83,7 @@ export const useFetch = ( url,options=defaultOptions) => {
         } */
 
         
-    },[url])
+    },[url,fetchAgain])
 
-    return state;
+    return {...state,refresh};
 }

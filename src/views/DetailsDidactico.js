@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {useLocation} from "react-router-dom";
 import {SeccionTitle} from '../components/SeccionTitle'
 import {apiUrl} from '../env/apiurl'
@@ -6,12 +6,21 @@ import { useFetch } from '../hooks/useFetch'
 import printIcon from '../assets/icons/printing.png'
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ErrorScreen } from '../components/ErrorScreen';
+import AppContext from '../context/appContext';
+import { getAuthHeader } from '../helper/getAuthHeader';
 
 export const DetailsDidactico = () => {
+    const {state}= useContext(AppContext)
+    const {authToken}=state
     const query = useQuery();
     const numero=query.get('numero')
     const tipo=query.get('tipo')
-    const {data,loading,error}=useFetch(`${apiUrl}/didacticos/id?tipo=${tipo}&numero=${numero}`)
+    const {data,loading,error,statusCode,refresh}=useFetch(`${apiUrl}/didacticos/id?tipo=${tipo}&numero=${numero}`,{
+        method: 'GET',
+        headers: getAuthHeader({authToken}),
+        redirect: 'follow'
+    })
+    
    
     const {nombre,img,pdf,existencias,nivelStock,tags}=data || {}
      console.log(data)
@@ -21,8 +30,11 @@ export const DetailsDidactico = () => {
             {
                 loading?
                     <LoadingSpinner />:
-                    error?
-                        <ErrorScreen />:
+                    error||statusCode!==200?
+                        <div className="w-full min-h-screen flex justify-center items-center">
+                            <ErrorScreen error={error} statusCode={statusCode} onRetry={refresh}/>
+                        </div>
+                        :
                         <div className="p-2 grid grid-cols-12 gap-y-4 ">
                             <div className="col-span-12">
                                 <SeccionTitle title={nombre}/>

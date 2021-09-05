@@ -5,13 +5,12 @@ import {SearchBar} from '../components/SearchBar'
 import {useFetch} from '../hooks/useFetch'
 import {apiUrl} from '../env/apiurl'
 import {getApiQueryParams} from '../helper/getApiQueryParams'
-
 import { Didactico } from '../components/Didactico'
 import { FloatButtonAdd } from '../components/FloatButtonAdd'
 import { LoadingSpinner } from '../components/LoadingSpinner';
-import { ErrorScreen } from '../components/ErrorScreen';
 import { getAuthHeader } from '../helper/getAuthHeader';
 import AppContext from '../context/appContext';
+import { ErrorScreen } from '../components/ErrorScreen';
 
 
 export const SearchDidactico = () => {
@@ -20,7 +19,7 @@ export const SearchDidactico = () => {
     const [lastSearch, setlastSearch] = useState('')
     const [url, seturl] = useState(`${apiUrl}/didacticos/low_stock`)
     const [keyWords, setkeyWords] = useState('')
-    const {data,loading,error,statusCode}=useFetch(url,{
+    const {data,loading,error,statusCode,refresh}=useFetch(url,{
         method: 'GET',
         headers: getAuthHeader({authToken}),
         redirect: 'follow'
@@ -38,7 +37,7 @@ export const SearchDidactico = () => {
         seturl(`${apiUrl}/didacticos/search?${queryParams}`)
     }
 
-    console.log(statusCode)
+    
     return (
         <div className="bg-gray-100 min-h-screen pb-8">
             <div className="mb-4">
@@ -54,8 +53,11 @@ export const SearchDidactico = () => {
                 loading?
                     <LoadingSpinner />
                     :
-                    error?
-                        <ErrorScreen />:
+                    error||statusCode!==200?
+                        <div className="w-full h-full flex justify-center items-center ">
+                            <ErrorScreen error={error} statusCode={statusCode} onRetry={refresh}/>
+                        </div>
+                        :
                         <div id="results" className="p-4">
                             <p className="text-gray-500 text-lg font-bold mb-4">
                                 {
