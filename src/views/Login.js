@@ -38,7 +38,7 @@ export const Login = () => {
                 },
                 body: JSON.stringify(values) // body data type must match "Content-Type" header
             });
-            response.status===403&&setErrorToLogin({error:true,message:"Usuario y/o contraseña incorrecto"})
+            response.status===403||response.status===401&&setErrorToLogin({error:true,message:"Usuario y/o contraseña incorrecto"})
             response.status===503&&setErrorToLogin({error:true,message:"Oops, tenemos un problema, intentalo mas tarde"})
             const {token}=await response.json();
             if(response.status===201){

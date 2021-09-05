@@ -19,10 +19,14 @@ import { Modal } from '../components/Modal'
 import { getAuthHeader } from '../helper/getAuthHeader'
 import AppContext from '../context/appContext'
 import { ErrorScreen } from '../components/ErrorScreen'
+import { useModal } from '../hooks/useModal'
+import { SucessScreen } from '../components/SucessScreen'
 
 export const FormNewDidactico = ({edit=false,initialValues=initialFormDidacticoValues}) => {
-    const [modalIsShowing, setmodalIsShowing] = useState(false)
-    const [modalMessage, setmodalMessage] = useState("")
+    
+    const[modalIsVisible,openModal,closeModal]= useModal({visible:false})
+    const [submitStatus, setsubmitStatus] = useState({submitError:false,submitStatusCode:null})
+    const {submitError,submitStatusCode}=submitStatus
     const {state}= useContext(AppContext)
     const {authToken}=state
     const formInitialValue=initialValues
@@ -50,26 +54,27 @@ export const FormNewDidactico = ({edit=false,initialValues=initialFormDidacticoV
         formData.append("didactico",JSON.stringify(didactico))
         formData.append("pdf",pdf,"didactico_pdf.pdf")
         formData.append("img",img,"didactico_img.png")
-        console.log(img)
+        const headers=new Headers();
+        headers.append("Authorization", `Bearer ${authToken}`)
+
         const options={
             method:edit?'PUT':'POST',
             redirect:'follow',
-            headers:getAuthHeader({authToken}),
+            headers:headers,
             body:formData
         }
-        console.log(didactico)
+        
+        
         fetch(`${apiUrl}/didacticos`,options)
-            .then(res=>res.text())
-            .then(result=>{
-                console.log(result)
-                setSubmitting(false)
+            .then(res=>{
                 resetForm();
-            })
-            .catch(e=>{
-                console.log(e)
                 setSubmitting(false)
-                setmodalMessage("Error Cao")
-                setmodalIsShowing(true)
+                setsubmitStatus({submitError:false,submitStatusCode:res.status})
+                openModal();
+            }).catch(e=>{
+                setSubmitting(false)
+                setsubmitStatus({submitError:true,submitStatusCode:null})
+                openModal();
             })
             
     }
@@ -85,7 +90,8 @@ export const FormNewDidactico = ({edit=false,initialValues=initialFormDidacticoV
                     </div>
                     :
                     <Formik initialValues={formInitialValue} onSubmit={handleSubmit} validationSchema= {schemaDidactico} >
-                        {({errors,touched,setFieldValue,setFieldError,setFieldTouched,values,isSubmitting})=>(
+                        {({errors,touched,setFieldValue,setFieldError,setFieldTouched,values,isSubmitting,submitForm})=>(
+                            <>
                             <Form className="mt-8  w-11/12	mx-auto rounded-lg px-4 py-8 grid grid-cols-2 gap-x-4 gap-y-6 bg-white">
                                 
                                 <Field name="numero" component={InputText} label="Numero" disabled={isSubmitting||edit}/>
@@ -137,18 +143,21 @@ export const FormNewDidactico = ({edit=false,initialValues=initialFormDidacticoV
                                     <SubmitButton isSubmiting={isSubmitting} text="guardar" onSubmitText="guardando" />
                                 </div>
                             </Form>
+                            {
+                                modalIsVisible&&
+                                    <Modal close={closeModal}>
+                                        {
+                                            submitError?
+                                                <ErrorScreen error={submitError} statusCode={submitStatusCode} onRetry={submitForm}/>:
+                                                <SucessScreen title="Guardado" message="La informacion del didactico se ha guardado con exito"/>
+                                        }
+                                    </Modal>
+                            }
+                            </>
                         )}
                     </Formik>
                     
             }
-            {
-
-                modalIsShowing && 
-                    <Modal close={()=>{setmodalIsShowing(false)}}>
-                        <InformationScreen />
-                    </Modal>
-            }
-
             
         </div>
     )
