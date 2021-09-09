@@ -1,1 +1,1 @@
-export const apiUrl='http://187.221.20.60'
+export const apiUrl='https://stormy-waters-34739.herokuapp.com/api'
