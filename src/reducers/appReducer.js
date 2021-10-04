@@ -9,6 +9,7 @@ export const initialState={
     authToken:null,
     userName:null,
     userPermissions:null,
+    silentLogin:{loading:true,error:null}
 }
 
 export const appReducer = (prevState={},action) => {
@@ -21,7 +22,12 @@ export const appReducer = (prevState={},action) => {
                 userPermissions,
                 authToken
             }
-
+        case TYPES.SET_SILENT_LOGIN:
+            const {loading,error}=action.payload
+            return {
+                ...prevState,
+                silentLogin:{loading,error}
+            }
         default: return {prevState}  
     }
     

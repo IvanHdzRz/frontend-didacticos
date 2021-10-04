@@ -33,6 +33,7 @@ export const Login = () => {
             const response = await fetch(`${apiUrl}/login`, {
                 method: 'POST', // *GET, POST, PUT, DELETE, etc.
                 mode: 'cors', // no-cors, *cors, same-origin
+                credentials: 'include',
                 headers: {
                   'Content-Type': 'application/json'
                 },
@@ -69,8 +70,8 @@ export const Login = () => {
                     <>
                         <Form className="mt-8  w-11/12	mx-auto rounded-lg px-4 py-8 flex flex-col bg-white space-y-6">
                             {error&&<WarningLabel forName="" warnMessage={message} /> }
-                            <Field name="username" component={InputText} label="Usuario"  />
-                            <Field name="password" component={InputText} label="Contraseña" isPassword  />
+                            <Field name="username" component={InputText} label="Usuario" disabled={isSubmitting}  />
+                            <Field name="password" component={InputText} label="Contraseña" isPassword disabled={isSubmitting}  />
                             <SubmitButton text="Ingresar" onSubmitText="Ingresando" isSubmiting={isSubmitting}/>
                         </Form>
                         {
