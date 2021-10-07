@@ -36,8 +36,9 @@ export const SearchDidactico = () => {
         e.preventDefault();
         setlastSearch(keyWords)
         const queryParams=getApiQueryParams(keyWords)
-        keyWords.trim()!==""&&
-        seturl(`${apiUrl}/didacticos/search?${queryParams}`)
+        keyWords.trim()!==""?
+            seturl(`${apiUrl}/didacticos/low_stock`):
+            seturl(`${apiUrl}/didacticos/search?${queryParams}`)
     }
 
     
