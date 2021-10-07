@@ -36,6 +36,7 @@ export const SearchDidactico = () => {
         e.preventDefault();
         setlastSearch(keyWords)
         const queryParams=getApiQueryParams(keyWords)
+        keyWords.trim()!==""&&
         seturl(`${apiUrl}/didacticos/search?${queryParams}`)
     }
 
@@ -66,7 +67,7 @@ export const SearchDidactico = () => {
                         <div id="results" className="p-4">
                             <p className="text-gray-500 text-lg font-bold mb-4">
                                 {
-                                    lastSearch===''? 
+                                    lastSearch.trim()===''? 
                                     <> Didacticos con bajas existencias</> :
                                     <>{data.length} Resultado{data.length!==1&&'s'} para:<span className="text-pink-500">"{lastSearch}"</span></>
                                 }
