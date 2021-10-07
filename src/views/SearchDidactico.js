@@ -11,6 +11,8 @@ import { LoadingSpinner } from '../components/LoadingSpinner';
 import { getAuthHeader } from '../helper/getAuthHeader';
 import AppContext from '../context/appContext';
 import { ErrorScreen } from '../components/ErrorScreen';
+import { Logout } from '../components/Logout';
+
 
 
 export const SearchDidactico = () => {
@@ -19,6 +21,7 @@ export const SearchDidactico = () => {
     const [lastSearch, setlastSearch] = useState('')
     const [url, seturl] = useState(`${apiUrl}/didacticos/low_stock`)
     const [keyWords, setkeyWords] = useState('')
+    
     const {data,loading,error,statusCode,refresh}=useFetch(url,{
         method: 'GET',
         headers: getAuthHeader({authToken}),
@@ -31,7 +34,6 @@ export const SearchDidactico = () => {
     
     const handleSearch=(e)=>{
         e.preventDefault();
-        console.log('voy a buscar')
         setlastSearch(keyWords)
         const queryParams=getApiQueryParams(keyWords)
         seturl(`${apiUrl}/didacticos/search?${queryParams}`)
@@ -40,6 +42,9 @@ export const SearchDidactico = () => {
     
     return (
         <div className="bg-gray-100 min-h-screen pb-8">
+            <div className="flex flex-row-reverse w-screen p-4 ">
+                <Logout/>
+            </div>
             <div className="mb-4">
                 <SeccionTitle title="Materiales Didacticos"/>
             </div>
@@ -88,6 +93,7 @@ export const SearchDidactico = () => {
                             
                         </div>
             }
+            
             <FloatButtonAdd />
         </div>
     )

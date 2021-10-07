@@ -28,6 +28,12 @@ export const appReducer = (prevState={},action) => {
                 ...prevState,
                 silentLogin:{loading,error}
             }
+        case TYPES.LOGOUT:
+            return{
+                ...initialState,
+                silentLogin:{loading:false,error:null}
+            } 
+
         default: return {prevState}  
     }
     
